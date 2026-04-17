@@ -209,12 +209,12 @@ export default function Profile() {
             I like building things that are useful and a little weird. My work lives at the intersection of developer tooling, AI infrastructure, and open-source communities. I previously worked at Google on Hotel Center and Dataplex UI, and now run Wazoo Technologies full-time while maintaining FartLabs and various community projects.
           </p>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            When I'm not shipping code, I'm probably organizing hackathons, breeding Pokémon, or hanging out in the ACM CSUF OSS community.
+            When I&apos;m not shipping code, I&apos;m probably organizing hackathons, breeding Pokémon, or hanging out in the ACM CSUF OSS community.
           </p>
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 text-center">Things I've built</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 text-center">Things I&apos;ve built</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {projects.map((project) => (
               <a
