@@ -1,6 +1,6 @@
 # etok.zo.space
 
-> **Source of truth** for etok.zo.space routes. Synced to Zo cloud via `update_space_route()` API.
+> **Zo Space mirror repo:** this repository mirrors the live routes running at `https://etok.zo.space`. Its job is to reflect the currently deployed Zo Space code as closely and immediately as possible.
 
 - **Live site:** [https://etok.zo.space](https://etok.zo.space)
 - **Zo Space API reference:** [docs.zocomputer.com/api](https://docs.zocomputer.com/api)
@@ -16,7 +16,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
   source of truth        (live running site)
 ```
 
-**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo is the canonical source of truth. Changes are developed here first, then pushed to Zo via the space API tools.
+**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo exists as the mirrored Git representation of that live Zo Space, and should be kept in lockstep with deployed routes.
 
 ---
 
@@ -25,6 +25,9 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 | Route | Type | Description |
 |-------|------|-------------|
 | `/` | page | Homepage — Game of Life hero, bio, projects, live PST clock |
+| `/gameboy-share` | page | Shared Game Room with live feed + multiplayer controls |
+| `/api/gameboy-share-state` | api | Shared game room state + recent input events |
+| `/api/gameboy-share-input` | api | Proxies controller input to shared upstream game session |
 
 ---
 

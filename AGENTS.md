@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repo (`etok.zo.space`) is the **source of truth** for all Zo Space routes on [https://etok.zo.space](https://etok.zo.space).
+This repo (`etok.zo.space`) is the mirrored Git copy of the live Zo Space routes on [https://etok.zo.space](https://etok.zo.space).
 
 ## Architecture
 
@@ -13,6 +13,11 @@ local files (this repo) → update_space_route() → Zo cloud → etok.zo.space
      ↑                                                        ↓
   source of truth                                    live running site
 ```
+
+## Mirror Status
+
+Treat this repo as the live mirror for `etok.zo.space`.
+When the deployed routes change, this repo should be updated right away so Git history matches production.
 
 ## Sync protocol
 
@@ -27,6 +32,9 @@ For every meaningful update, commit a versioned snapshot so Git history = deploy
 | Route | Type | Status |
 |-------|------|--------|
 | `/` | page | live — Game of Life hero, bio, PST clock |
+| `/gameboy-share` | page | live — shared game room (multiplayer controls) |
+| `/api/gameboy-share-state` | api | live — game room event/state feed |
+| `/api/gameboy-share-input` | api | live — button input relay to shared session |
 
 ## Related
 
