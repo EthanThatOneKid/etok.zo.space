@@ -1,6 +1,6 @@
 # etok.zo.space
 
-> **Consolidated with `zo-hub`:** this repo overlaps with `zo-hub` for the homepage route. The active homepage mirror is `zo-hub`, which should reflect the latest deployed `/` route at `https://etok.zo.space`.
+The canonical mirror of the live Zo Space at [https://etok.zo.space](https://etok.zo.space).
 
 - **Live site:** [https://etok.zo.space](https://etok.zo.space)
 - **Zo Space API reference:** [docs.zocomputer.com/api](https://docs.zocomputer.com/api)
@@ -16,7 +16,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
   source of truth        (live running site)
 ```
 
-**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo exists as the mirrored Git representation of that live Zo Space, and should be kept in lockstep with deployed routes.
+**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo mirrors the live Zo Space and should be kept in lockstep with deployed routes.
 
 ---
 
@@ -24,13 +24,13 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 
 | Route | Type | Description |
 |-------|------|-------------|
-| `/` | page | Homepage mirror; keep this aligned with `zo-hub/routes/index.ts` |
+| `/` | page | Homepage — Game of Life hero, project cards, social links |
 
 ---
 
 ## Sync workflow
 
-When you make changes to the homepage mirror in this repo:
+When you make changes:
 
 1. `git add && git commit && git push`
 2. Run `update_space_route()` from Zo to push the updated code to the cloud
@@ -39,6 +39,17 @@ When you make changes to the homepage mirror in this repo:
 
 ---
 
-## Challenge
+## Tech
 
-Built for the [Zo x Contra Challenge](https://contra.com/community/topic/zocomputerchallenge) (Apr 13–22, 2026).
+- **Framework:** Zo Space (Hono + React on Bun)
+- **Styling:** Tailwind CSS 4
+- **Animation:** Canvas-based Conway's Game of Life, mouse-reactive glow
+- **Live clock:** Pacific time zone display
+
+---
+
+## Related
+
+- [etok.me](https://etok.me) — main portfolio (external)
+- [book repo](https://github.com/EthanThatOneKid/book) — knowledge base, meeting notes, zets
+- [Zo x Contra Challenge](https://contra.com/community/topic/zocomputerchallenge)
