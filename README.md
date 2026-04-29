@@ -1,6 +1,6 @@
 # etok.zo.space
 
-> **Zo Space mirror repo:** this repository mirrors the live routes running at `https://etok.zo.space`. Its job is to reflect the currently deployed Zo Space code as closely and immediately as possible.
+> **Consolidated with `zo-hub`:** this repo overlaps with `zo-hub` for the homepage route. The active homepage mirror is `zo-hub`, which should reflect the latest deployed `/` route at `https://etok.zo.space`.
 
 - **Live site:** [https://etok.zo.space](https://etok.zo.space)
 - **Zo Space API reference:** [docs.zocomputer.com/api](https://docs.zocomputer.com/api)
@@ -24,16 +24,13 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 
 | Route | Type | Description |
 |-------|------|-------------|
-| `/` | page | Homepage — Game of Life hero, bio, projects, live PST clock |
-| `/gameboy-share` | page | Shared Game Room with live feed + multiplayer controls |
-| `/api/gameboy-share-state` | api | Shared game room state + recent input events |
-| `/api/gameboy-share-input` | api | Proxies controller input to shared upstream game session |
+| `/` | page | Homepage mirror; keep this aligned with `zo-hub/routes/index.ts` |
 
 ---
 
 ## Sync workflow
 
-When you make changes to a route in this repo:
+When you make changes to the homepage mirror in this repo:
 
 1. `git add && git commit && git push`
 2. Run `update_space_route()` from Zo to push the updated code to the cloud

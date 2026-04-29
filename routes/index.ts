@@ -92,6 +92,7 @@ const links = [
   { label: "GitHub", url: "https://github.com/EthanThatOneKid", icon: "🐙" },
   { label: "X / Twitter", url: "https://x.com/etok_me", icon: "✦" },
   { label: "LinkedIn", url: "https://linkedin.com/in/etok", icon: "◎" },
+  { label: "Zo Plays Pokemon", url: "/zoplayspokemon", icon: "🎮" },
   { label: "Portfolio", url: "https://etok.me", icon: "☆" },
   { label: "Resume", url: "https://etok.me/resume", icon: "📎" },
   { label: "Book a call", url: "https://etok.me/meet", icon: "☎" },
