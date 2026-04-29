@@ -2,7 +2,8 @@
 
 ## Overview
 
-This repo (`etok.zo.space`) is the canonical mirror of the live Zo Space at [https://etok.zo.space](https://etok.zo.space).
+This repo (`etok.zo.space`) overlaps with `zo-hub` for the homepage route on [https://etok.zo.space](https://etok.zo.space).
+Treat `zo-hub` as the active homepage mirror and keep `routes/index.ts` here aligned with it when this repo is touched.
 
 ## Architecture
 
@@ -13,6 +14,11 @@ local files (this repo) → update_space_route() → Zo cloud → etok.zo.space
      ↑                                                        ↓
   source of truth                                    live running site
 ```
+
+## Mirror Status
+
+This repo is no longer the broad canonical mirror for every route.
+Its remaining practical role is as a duplicate homepage mirror that should match `zo-hub`.
 
 ## Sync protocol
 
@@ -26,16 +32,7 @@ For every meaningful update, commit a versioned snapshot so Git history = deploy
 
 | Route | Type | Status |
 |-------|------|--------|
-| `/` | page | live — homepage with Game of Life hero, project cards, social links |
-
-## Tech
-
-- Pure React + Tailwind CSS 4
-- Game of Life as SVG/Canvas overlay on hero
-- Live PST clock
-- Project showcase (Wazoo, FartLabs, FullyHacks, acmcsufoss)
-- Social links (GitHub, X, LinkedIn, etc.)
-- Zo affiliate CTA
+| `/` | page | live — homepage mirror, should stay aligned with `zo-hub/routes/index.ts` |
 
 ## Related
 
