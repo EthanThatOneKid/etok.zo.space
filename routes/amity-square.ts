@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 type Dir = "up" | "down" | "left" | "right";
 type Point = { x: number; y: number };
@@ -15,67 +15,43 @@ const FOLLOW_LAG = 26;
 const CAM_LERP = 0.14;
 const MASK_THRESHOLD = 180;
 const INTERACT_RADIUS = 28;
-const TILE = 16;
-const GRID_W = Math.ceil(1006 / TILE);
-const GRID_H = Math.ceil(774 / TILE);
+const TILE = 16; // Must match editor TILE
+const GRID_W = Math.ceil(1006 / TILE); // 63
+const GRID_H = Math.ceil(774 / TILE); // 49
 
 const PLAYER_SPRITE = "/images/amity-square/lucas-overworld.png";
 const FOLLOWER_SPRITE = "/images/amity-square/pikachu-overworld.png";
 const MAP_IMAGE = "/images/amity-square/amity-square-map.png";
 const WALK_MASK = "/images/amity-square/amity-square-walk-mask.png";
+const PUBLISHED_MASK_KEY = "amity-square-mask-v1";
+const PUBLISHED_OBJS_KEY = "amity-square-objs-v1";
 
+// Gameplay start — on the main path near the pond
 const START = { x: 505, y: 387 };
 
-function clamp(v: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, v));
-}
-
+function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)); }
 function keyToDir(key: string): Dir | null {
   switch (key) {
-    case "arrowup":
-    case "w":
-      return "up";
-    case "arrowdown":
-    case "s":
-      return "down";
-    case "arrowleft":
-    case "a":
-      return "left";
-    case "arrowright":
-    case "d":
-      return "right";
-    default:
-      return null;
+    case "arrowup": case "w": return "up";
+    case "arrowdown": case "s": return "down";
+    case "arrowleft": case "a": return "left";
+    case "arrowright": case "d": return "right";
+    default: return null;
   }
 }
-
 function dirVector(dir: Dir) {
   switch (dir) {
-    case "up":
-      return { dx: 0, dy: -1 };
-    case "down":
-      return { dx: 0, dy: 1 };
-    case "left":
-      return { dx: -1, dy: 0 };
-    case "right":
-      return { dx: 1, dy: 0 };
+    case "up": return { dx: 0, dy: -1 };
+    case "down": return { dx: 0, dy: 1 };
+    case "left": return { dx: -1, dy: 0 };
+    case "right": return { dx: 1, dy: 0 };
   }
 }
-
 function chooseDir(active: Set<string>, last: Dir | null): Dir | null {
-  if (
-    last &&
-    ((last === "up" && active.has("arrowup")) ||
-      (last === "up" && active.has("w")) ||
-      (last === "down" && active.has("arrowdown")) ||
-      (last === "down" && active.has("s")) ||
-      (last === "left" && active.has("arrowleft")) ||
-      (last === "left" && active.has("a")) ||
-      (last === "right" && active.has("arrowright")) ||
-      (last === "right" && active.has("d")))
-  ) {
-    return last;
-  }
+  if (last && ((last === "up" && active.has("arrowup")) || (last === "up" && active.has("w")) ||
+    (last === "down" && active.has("arrowdown")) || (last === "down" && active.has("s")) ||
+    (last === "left" && active.has("arrowleft")) || (last === "left" && active.has("a")) ||
+    (last === "right" && active.has("arrowright")) || (last === "right" && active.has("d")))) return last;
   if (active.has("arrowup") || active.has("w")) return "up";
   if (active.has("arrowdown") || active.has("s")) return "down";
   if (active.has("arrowleft") || active.has("a")) return "left";
@@ -95,12 +71,10 @@ function drawShadow(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
 function drawSprite(
   ctx: CanvasRenderingContext2D,
   sprite: HTMLImageElement,
-  dx: number,
-  dy: number,
-  dw: number,
-  dh: number,
-  row: number,
-  col: number,
+  sx: number, sy: number,
+  dx: number, dy: number,
+  dw: number, dh: number,
+  row: number, col: number,
 ) {
   ctx.drawImage(sprite, col * SPRITE, row * SPRITE, SPRITE, SPRITE, dx, dy, dw, dh);
 }
@@ -110,34 +84,27 @@ async function loadPublishedFile(path: string): Promise<string | null> {
     const res = await fetch(path);
     if (!res.ok) return null;
     return await res.text();
-  } catch {
-    return null;
-  }
+  } catch { return null; }
+}
+
+async function loadPublishedMask(path: string, mapW: number, mapH: number): Promise<Uint8ClampedArray | null> {
+  try {
+    const img = new Image();
+    const loaded = new Promise<boolean>((res, rej) => { img.onload = () => res(true); img.onerror = () => rej(); });
+    img.crossOrigin = "anonymous";
+    img.src = path;
+    await loaded;
+    const offscreen = document.createElement("canvas");
+    offscreen.width = mapW;
+    offscreen.height = mapH;
+    offscreen.getContext("2d")!.drawImage(img, 0, 0);
+    return new Uint8ClampedArray(offscreen.getContext("2d")!.getImageData(0, 0, mapW, mapH).data);
+  } catch { return null; }
 }
 
 const DEFAULT_OBJS: InteractObj[] = [
-  {
-    id: "nurse",
-    x: 580,
-    y: 385,
-    label: "Nurse Joy",
-    dialog: [
-      "Welcome to Amity Square!",
-      "Your Pikachu looks so happy out here.",
-      "Take care of each other! ♥",
-    ],
-  },
-  {
-    id: "sign",
-    x: 490,
-    y: 420,
-    label: "Info Sign",
-    dialog: [
-      "Amity Square",
-      "A relaxing park in Hearthome City.",
-      "Only specially-bonded Pokémon can visit.",
-    ],
-  },
+  { id: "nurse", x: 580, y: 385, label: "Nurse Joy", dialog: ["Welcome to Amity Square!", "Your Pikachu looks so happy out here.", "Take care of each other! ♥"] },
+  { id: "sign", x: 490, y: 420, label: "Info Sign", dialog: ["Amity Square", "A relaxing park in Hearthome City.", "Only specially-bonded Pokémon can visit."] },
 ];
 
 function tileWalkableFromMask(maskData: Uint8ClampedArray, maskW: number, tileTX: number, tileTY: number): boolean {
@@ -180,12 +147,9 @@ export default function AmitySquare() {
   const [dialog, setDialog] = useState<string[] | null>(null);
   const [dialogIdx, setDialogIdx] = useState(0);
   const dialogRef = useRef<string[] | null>(null);
+  useEffect(() => { dialogRef.current = dialog; }, [dialog]);
 
-  useEffect(() => {
-    dialogRef.current = dialog;
-  }, [dialog]);
-
-  const buildTileGrid = (maskData: Uint8ClampedArray, maskW: number): boolean[][] => {
+  const buildTileGrid = (maskData: Uint8ClampedArray, maskW: number, maskH: number): boolean[][] => {
     const grid: boolean[][] = [];
     for (let ty = 0; ty < GRID_H; ty++) {
       grid[ty] = [];
@@ -198,17 +162,13 @@ export default function AmitySquare() {
 
   useEffect(() => {
     let live = true;
-
     const playerSprite = new Image();
     const followerSprite = new Image();
     const mapImage = new Image();
     const maskImage = new Image();
 
     const whenLoaded = (img: HTMLImageElement) =>
-      new Promise<void>((res) => {
-        img.onload = () => res();
-        img.onerror = () => res();
-      });
+      new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); });
 
     playerSprite.src = PLAYER_SPRITE;
     followerSprite.src = FOLLOWER_SPRITE;
@@ -218,12 +178,9 @@ export default function AmitySquare() {
     const loadWorkspaceFile = (path: string) =>
       new Promise<string>((res) => {
         fetch(path)
-          .then((r) => (r.ok ? r.blob() : null))
-          .then((blob) => {
-            if (!blob) {
-              res("");
-              return;
-            }
+          .then(r => r.ok ? r.blob() : null)
+          .then(blob => {
+            if (!blob) { res(""); return; }
             const reader = new FileReader();
             reader.onload = () => res(reader.result as string);
             reader.onerror = () => res("");
@@ -232,90 +189,77 @@ export default function AmitySquare() {
           .catch(() => res(""));
       });
 
-    Promise.all([whenLoaded(playerSprite), whenLoaded(followerSprite), whenLoaded(mapImage), whenLoaded(maskImage)]).then(
-      async () => {
-        if (!live) return;
+    Promise.all([whenLoaded(playerSprite), whenLoaded(followerSprite), whenLoaded(mapImage), whenLoaded(maskImage)]).then(async () => {
+      if (!live) return;
 
-        const offscreen = document.createElement("canvas");
-        offscreen.width = maskImage.naturalWidth || 1006;
-        offscreen.height = maskImage.naturalHeight || 774;
-        const offCtx = offscreen.getContext("2d")!;
-        offCtx.drawImage(maskImage, 0, 0);
-        const baseMask = new Uint8ClampedArray(offCtx.getImageData(0, 0, offscreen.width, offscreen.height).data);
+      const offscreen = document.createElement("canvas");
+      offscreen.width = maskImage.naturalWidth || 1006;
+      offscreen.height = maskImage.naturalHeight || 774;
+      const offCtx = offscreen.getContext("2d")!;
+      offCtx.drawImage(maskImage, 0, 0);
+      const baseMask = new Uint8ClampedArray(offCtx.getImageData(0, 0, offscreen.width, offscreen.height).data);
 
-        const maskBase64 = await loadWorkspaceFile("/amity-square-mask.png");
-        let finalMaskData: Uint8ClampedArray = baseMask;
+      const maskBase64 = await loadWorkspaceFile("/amity-square-mask.png");
+      let finalMaskData: Uint8ClampedArray = baseMask;
 
-        if (maskBase64) {
-          const pubImg = new Image();
-          await new Promise<void>((res) => {
-            pubImg.onload = () => res();
-            pubImg.onerror = () => res();
-            pubImg.src = maskBase64;
-          });
-          const pubCanvas = document.createElement("canvas");
-          pubCanvas.width = offscreen.width;
-          pubCanvas.height = offscreen.height;
-          pubCanvas.getContext("2d")!.drawImage(pubImg, 0, 0);
-          finalMaskData = new Uint8ClampedArray(
-            pubCanvas.getContext("2d")!.getImageData(0, 0, offscreen.width, offscreen.height).data,
-          );
+      if (maskBase64) {
+        const pubImg = new Image();
+        await new Promise<void>((res) => { pubImg.onload = () => res(); pubImg.onerror = () => res(); pubImg.src = maskBase64; });
+        const pubCanvas = document.createElement("canvas");
+        pubCanvas.width = offscreen.width;
+        pubCanvas.height = offscreen.height;
+        pubCanvas.getContext("2d")!.drawImage(pubImg, 0, 0);
+        finalMaskData = new Uint8ClampedArray(pubCanvas.getContext("2d")!.getImageData(0, 0, offscreen.width, offscreen.height).data);
+      }
+
+      try {
+        const objsJson = await loadPublishedFile("/amity-square-objects.json");
+        if (objsJson) {
+          const objs = JSON.parse(objsJson);
+          if (Array.isArray(objs) && objs.length > 0) interactObjsRef.current = objs;
         }
+      } catch { /* use defaults */ }
 
-        try {
-          const objsJson = await loadPublishedFile("/amity-square-objects.json");
-          if (objsJson) {
-            const objs = JSON.parse(objsJson);
-            if (Array.isArray(objs) && objs.length > 0) interactObjsRef.current = objs;
-          }
-        } catch {}
+      const tileGrid = buildTileGrid(finalMaskData, offscreen.width, offscreen.height);
+      publishedTileDataRef.current = tileGrid;
+      maskDataRef.current = finalMaskData;
+      playerSpriteRef.current = playerSprite;
+      followerSpriteRef.current = followerSprite;
+      mapRef.current = mapImage;
+      worldSizeRef.current = { w: mapImage.naturalWidth || 1006, h: mapImage.naturalHeight || 774 };
 
-        const tileGrid = buildTileGrid(finalMaskData, offscreen.width);
-        publishedTileDataRef.current = tileGrid;
-        maskDataRef.current = finalMaskData;
+      const mW = mapImage.naturalWidth || 1006;
+      const mH = mapImage.naturalHeight || 774;
+      camRef.current = {
+        x: clamp(START.x - VIEW_W / 2, 0, Math.max(0, mW - VIEW_W)),
+        y: clamp(START.y - VIEW_H / 2, 0, Math.max(0, mH - VIEW_H)),
+      };
 
-        playerSpriteRef.current = playerSprite;
-        followerSpriteRef.current = followerSprite;
-        mapRef.current = mapImage;
-        worldSizeRef.current = { w: mapImage.naturalWidth || 1006, h: mapImage.naturalHeight || 774 };
-
-        const mW = mapImage.naturalWidth || 1006;
-        const mH = mapImage.naturalHeight || 774;
-        camRef.current = {
-          x: clamp(START.x - VIEW_W / 2, 0, Math.max(0, mW - VIEW_W)),
-          y: clamp(START.y - VIEW_H / 2, 0, Math.max(0, mH - VIEW_H)),
-        };
-
-        const startTX = Math.floor(START.x / TILE);
-        const startTY = Math.floor(START.y / TILE);
-        if (startTY >= 0 && startTY < GRID_H && startTX >= 0 && startTX < GRID_W && !tileGrid[startTY]?.[startTX]) {
-          outer: for (let r = 1; r < 20; r++) {
-            for (let angle = 0; angle < 360; angle += 30) {
-              const rad = (angle * Math.PI) / 180;
-              const tx = startTX + Math.round(r * Math.cos(rad));
-              const ty = startTY + Math.round(r * Math.sin(rad));
-              if (ty >= 0 && ty < GRID_H && tx >= 0 && tx < GRID_W && tileGrid[ty]?.[tx]) {
-                playerRef.current = { x: tx * TILE + TILE / 2, y: ty * TILE + TILE / 2 };
-                followerRef.current = { x: playerRef.current.x - 28, y: playerRef.current.y + 10 };
-                for (let i = 0; i < trailRef.current.length; i++) trailRef.current[i] = { ...playerRef.current };
-                break outer;
-              }
+      const startTX = Math.floor(START.x / TILE);
+      const startTY = Math.floor(START.y / TILE);
+      if (startTY >= 0 && startTY < GRID_H && startTX >= 0 && startTX < GRID_W && !tileGrid[startTY]?.[startTX]) {
+        outer: for (let r = 1; r < 20; r++) {
+          for (let angle = 0; angle < 360; angle += 30) {
+            const rad = (angle * Math.PI) / 180;
+            const tx = startTX + Math.round(r * Math.cos(rad));
+            const ty = startTY + Math.round(r * Math.sin(rad));
+            if (ty >= 0 && ty < GRID_H && tx >= 0 && tx < GRID_W && tileGrid[ty]?.[tx]) {
+              playerRef.current = { x: tx * TILE + TILE / 2, y: ty * TILE + TILE / 2 };
+              followerRef.current = { x: playerRef.current.x - 28, y: playerRef.current.y + 10 };
+              for (let i = 0; i < trailRef.current.length; i++) trailRef.current[i] = { ...playerRef.current };
+              break outer;
             }
           }
         }
+      }
 
-        setReady(true);
-      },
-    );
+      setReady(true);
+    });
 
-    return () => {
-      live = false;
-    };
+    return () => { live = false; };
   }, []);
 
-  useEffect(() => {
-    showMaskRef.current = showMask;
-  }, [showMask]);
+  useEffect(() => { showMaskRef.current = showMask; }, [showMask]);
 
   useEffect(() => {
     const onDown = (e: KeyboardEvent) => {
@@ -323,22 +267,16 @@ export default function AmitySquare() {
       if (key === " " || key === "enter") {
         e.preventDefault();
         if (dialogRef.current) {
-          if (dialogIdx < dialogRef.current.length - 1) setDialogIdx((i) => i + 1);
-          else {
-            setDialog(null);
-            setDialogIdx(0);
-          }
+          if (dialogIdx < dialogRef.current.length - 1) setDialogIdx(i => i + 1);
+          else { setDialog(null); setDialogIdx(0); }
         } else {
           const px = Math.round(playerRef.current.x);
           const py = Math.round(playerRef.current.y);
-          const nearby = interactObjsRef.current.find((o) => {
+          const nearby = interactObjsRef.current.find(o => {
             const dist = Math.sqrt((o.x - px) ** 2 + (o.y - py) ** 2);
             return dist < INTERACT_RADIUS;
           });
-          if (nearby) {
-            setDialog(nearby.dialog);
-            setDialogIdx(0);
-          }
+          if (nearby) { setDialog(nearby.dialog); setDialogIdx(0); }
         }
         return;
       }
@@ -356,11 +294,8 @@ export default function AmitySquare() {
     };
     window.addEventListener("keydown", onDown);
     window.addEventListener("keyup", onUp);
-    return () => {
-      window.removeEventListener("keydown", onDown);
-      window.removeEventListener("keyup", onUp);
-    };
-  }, [dialogIdx]);
+    return () => { window.removeEventListener("keydown", onDown); window.removeEventListener("keyup", onUp); };
+  }, []);
 
   useEffect(() => {
     if (!ready) return;
@@ -379,9 +314,7 @@ export default function AmitySquare() {
       if (tx < 0 || ty < 0 || tx >= GRID_W || ty >= GRID_H) return false;
       return tileGrid[ty]?.[tx] ?? false;
     };
-
     const worldToTile = (wx: number, wy: number) => ({ tx: Math.floor(wx / TILE), ty: Math.floor(wy / TILE) });
-
     const isWorldWalkable = (wx: number, wy: number) => {
       const { tx, ty } = worldToTile(wx + SPRITE / 2, wy + SPRITE - 5);
       return isTileWalkable(tx, ty);
@@ -419,9 +352,8 @@ export default function AmitySquare() {
         x: followerRef.current.x + (anchor.x - followerRef.current.x) * FOLLOW_EASE,
         y: followerRef.current.y + (anchor.y - followerRef.current.y) * FOLLOW_EASE,
       };
-      const prevFollower = trailRef.current[trailRef.current.length - 2] ?? followerRef.current;
-      const fdx = followerRef.current.x - prevFollower.x;
-      const fdy = followerRef.current.y - prevFollower.y;
+      const fdx = followerRef.current.x - (trailRef.current[trailRef.current.length - 2] ?? followerRef.current).x;
+      const fdy = followerRef.current.y - (trailRef.current[trailRef.current.length - 2] ?? followerRef.current).y;
       if (Math.abs(fdx) > Math.abs(fdy) && Math.abs(fdx) > 0.1) followerFacingRef.current = fdx > 0 ? "right" : "left";
       else if (Math.abs(fdy) > 0.1) followerFacingRef.current = fdy > 0 ? "down" : "up";
       followerClock += dt;
@@ -458,17 +390,14 @@ export default function AmitySquare() {
 
       const playerFrame = moving ? Math.floor(walkClock / 110) % 4 : 0;
       const followerFrame = Math.floor(followerClock / 180) % 2;
-
       const ps = { x: Math.round(playerRef.current.x - camX), y: Math.round(playerRef.current.y - camY) };
       const fs = { x: Math.round(followerRef.current.x - camX), y: Math.round(followerRef.current.y - camY) };
-
       const playerRow = facingRef.current === "down" ? 0 : facingRef.current === "up" ? 1 : facingRef.current === "left" ? 2 : 3;
-      const followerRow =
-        followerFacingRef.current === "down" ? 0 : followerFacingRef.current === "up" ? 1 : followerFacingRef.current === "left" ? 2 : 3;
+      const followerRow = followerFacingRef.current === "down" ? 0 : followerFacingRef.current === "up" ? 1 : followerFacingRef.current === "left" ? 2 : 3;
 
       drawShadow(ctx, ps.x + SPRITE / 2, ps.y + SPRITE - 4);
-      drawSprite(ctx, followerSprite, fs.x - 2, fs.y + 2, FOLLOWER_DRAW, FOLLOWER_DRAW, followerRow, followerFrame % 2);
-      drawSprite(ctx, playerSprite, ps.x, ps.y - 2, PLAYER_DRAW, PLAYER_DRAW, playerRow, playerFrame);
+      drawSprite(ctx, followerSprite, 0, 0, fs.x - 2, fs.y + 2, FOLLOWER_DRAW, FOLLOWER_DRAW, followerRow, followerFrame % 2);
+      drawSprite(ctx, playerSprite, 0, 0, ps.x, ps.y - 2, PLAYER_DRAW, PLAYER_DRAW, playerRow, playerFrame);
 
       hudClock += dt;
       if (hudClock > 120) {
@@ -496,13 +425,7 @@ export default function AmitySquare() {
             <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Amity Square</h1>
             <p className="mt-2 max-w-2xl text-sm text-emerald-100/70">Rebuilt around the original Platinum map art and movement footprint.</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setDebug((v) => !v)}
-            className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-medium tracking-wide text-white/85 backdrop-blur transition hover:bg-black/45"
-          >
-            {debug ? "Hide debug" : "Show debug"}
-          </button>
+          <button type="button" onClick={() => setDebug(v => !v)} className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-medium tracking-wide text-white/85 backdrop-blur transition hover:bg-black/45">{debug ? "Hide debug" : "Show debug"}</button>
         </div>
 
         <div className="relative overflow-hidden rounded-[24px] border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.55)]" style={{ width: VIEW_W, height: VIEW_H }}>
@@ -511,17 +434,7 @@ export default function AmitySquare() {
         </div>
 
         {dialog && (
-          <div
-            className="absolute bottom-0 left-0 right-0 cursor-pointer p-2"
-            style={{ height: 80 }}
-            onClick={() => {
-              if (dialogIdx < dialog.length - 1) setDialogIdx((i) => i + 1);
-              else {
-                setDialog(null);
-                setDialogIdx(0);
-              }
-            }}
-          >
+          <div className="absolute bottom-0 left-0 right-0 cursor-pointer p-2" style={{ height: 80 }} onClick={() => { if (dialogIdx < dialog.length - 1) setDialogIdx(i => i + 1); else { setDialog(null); setDialogIdx(0); } }}>
             <div className="rounded-xl border border-white/40 bg-black/85 px-4 py-2 text-sm text-white shadow-xl backdrop-blur-sm">
               <div className="mb-1 text-xs text-yellow-300">💬 {dialog[dialogIdx]}</div>
               {dialog.length > 1 && <div className="text-xs text-white/50">▼ {dialogIdx + 1}/{dialog.length}</div>}
@@ -543,13 +456,7 @@ export default function AmitySquare() {
             <div>{hud.walkable ? "✅ walkable" : "🚫 blocked"}</div>
             <div>dir: {hud.dir}</div>
             <div className="col-span-4 flex items-center gap-4">
-              <button
-                type="button"
-                onClick={() => setShowMask((v) => !v)}
-                className="rounded border border-white/20 bg-black/40 px-3 py-1.5 text-center text-white/80 hover:bg-black/60"
-              >
-                {showMask ? "Hide grid" : "Show grid"}
-              </button>
+              <button type="button" onClick={() => setShowMask(v => !v)} className="rounded border border-white/20 bg-black/40 px-3 py-1.5 text-center text-white/80 hover:bg-black/60">{showMask ? "Hide grid" : "Show grid"}</button>
               <span className="inline-block h-3 w-3 rounded bg-green-500/60" /> walkable tile
               <span className="inline-block h-3 w-3 rounded bg-red-500/60" /> blocked tile
               <span className="ml-4 text-zinc-400">Editor: /amity-square-mask-editor</span>
