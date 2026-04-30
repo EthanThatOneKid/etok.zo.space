@@ -1,9 +1,9 @@
-# etok.zo.space — Agent Memory
+# etok.zo.space — Legacy Mirror Memory
 
 ## Overview
 
-This repo (`etok.zo.space`) overlaps with `zo-hub` for the homepage route on [https://etok.zo.space](https://etok.zo.space).
-Treat `zo-hub` as the active homepage mirror and keep `routes/index.ts` here aligned with it when this repo is touched.
+This top-level directory is a legacy mirror. The canonical local repo is `/home/workspace/code/github.com/EthanThatOneKid/etok.zo.space/`.
+This mirror overlaps with `zo-hub` for the homepage route on [https://etok.zo.space](https://etok.zo.space), so keep it aligned only when mirror maintenance is needed.
 
 ## Architecture
 
@@ -19,6 +19,7 @@ local files (this repo) → update_space_route() → Zo cloud → etok.zo.space
 
 This repo is no longer the broad canonical mirror for every route.
 Its remaining practical role is as a duplicate homepage mirror that should match `zo-hub`.
+Use the canonical repo under `code/github.com/EthanThatOneKid/etok.zo.space/` for source-of-truth edits.
 
 ## Sync protocol
 
