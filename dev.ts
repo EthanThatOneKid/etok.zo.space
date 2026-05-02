@@ -1,66 +1,121 @@
-import * as esbuild from "npm:esbuild@^0.24.2";
+import type { ExpandGlobOptions } from "jsr:@std/fs@^1.0.1";
+import { expandGlob } from "jsr:@std/fs@^1.0.1";
+import { toFileUrl } from "jsr:@std/path@^1.0.2";
+import React from "npm:react@19.0.0";
+import { renderToString } from "npm:react-dom@19.0.0/server";
 
-console.log("Zo Space CLI listening on http://localhost:5173/");
+export async function* expandGlobImport(
+  glob: string | URL,
+  options?: ExpandGlobOptions,
+): AsyncGenerator<[string, unknown]> {
+  for await (const entry of expandGlob(glob, options)) {
+    const tsxPath = entry.path.replace(/\.ts$/, ".tsx");
+    await Deno.copyFile(entry.path, tsxPath);
+    
+    // Add dynamic cache-busting so it picks up the latest edits
+    const fileUrl = toFileUrl(tsxPath).href + `?cache=${Date.now()}`;
+    const module = await import(fileUrl);
+    
+    await Deno.remove(tsxPath);
+    yield [entry.path, module];
+  }
+}
+
+export async function fromAsync<T>(
+  generator: AsyncGenerator<[string, T]>,
+): Promise<Map<string, T>> {
+  const result = new Map<string, T>();
+  for await (const [key, value] of generator) {
+    result.set(key, value);
+  }
+  return result;
+}
+
+export function expandGlobImportToMap(
+  glob: string | URL,
+  options?: ExpandGlobOptions,
+): Promise<Map<string, any>> {
+  return fromAsync(expandGlobImport(glob, options));
+}
+
+console.log("Zo Space SSR server listening on http://localhost:5173/");
 
 Deno.serve({ port: 5173 }, async (req) => {
   const url = new URL(req.url);
 
-  // Serve bundled routes
-  if (url.pathname === "/routes/index.js") {
-    try {
-      const result = await esbuild.build({
-        entryPoints: ["./routes/index.ts"],
-        bundle: true,
-        write: false,
-        format: "esm",
-        jsx: "automatic",
-        jsxImportSource: "https://esm.sh/react@19.0.0",
-        loader: { ".ts": "tsx" },
-        external: ["react", "react-dom", "react-dom/client"],
-      });
+  // Load all route modules
+  const routesMap = await expandGlobImportToMap("./routes/**/*.ts");
 
-      return new Response(result.outputFiles[0].text, {
-        headers: { "content-type": "application/javascript" },
-      });
+  let matchedModule: any = null;
+  for (const [path, module] of routesMap) {
+    const normalized = path.replace(/\\/g, "/");
+    
+    // API Route Match
+    if (url.pathname.startsWith("/api/")) {
+      const name = normalized.split("/routes/api/")[1]?.replace(".ts", "");
+      if (name && url.pathname === `/api/${name}`) {
+        matchedModule = module;
+        break;
+      }
+    } else {
+      // UI Page Match
+      if (url.pathname === "/" && normalized.endsWith("routes/index.ts")) {
+        matchedModule = module;
+        break;
+      }
+      const name = normalized.split("/routes/")[1]?.replace(".ts", "");
+      if (name && url.pathname === `/${name}`) {
+        matchedModule = module;
+        break;
+      }
+    }
+  }
+
+  if (!matchedModule || !matchedModule.default) {
+    return new Response("404 Not Found", { status: 404 });
+  }
+
+  // Handle API Endpoint
+  if (url.pathname.startsWith("/api/")) {
+    const c = {
+      req: {
+        query: (key: string) => url.searchParams.get(key) || undefined,
+        json: async () => req.body ? await req.json() : {},
+      },
+      json: (data: any) => new Response(JSON.stringify(data), {
+        headers: { "content-type": "application/json" }
+      })
+    };
+    try {
+      return await matchedModule.default(c);
     } catch (err) {
       console.error(err);
       return new Response(String(err), { status: 500 });
     }
   }
 
-  // Render the single HTML page
-  const html = `<!DOCTYPE html>
+  // Handle UI Endpoint via SSR
+  try {
+    const body = renderToString(React.createElement(matchedModule.default));
+
+    const html = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>etok.zo.space - Deno Local</title>
+    <title>etok.zo.space - Deno SSR</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0?dev",
-        "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime?dev",
-        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client?dev"
-      }
-    }
-    </script>
   </head>
   <body class="bg-[#0a100a] text-white">
-    <div id="root"></div>
-    <script type="module">
-      import React from "react";
-      import ReactDOM from "react-dom/client";
-      import Profile from "/routes/index.js";
-
-      ReactDOM.createRoot(document.getElementById("root")).render(
-        React.createElement(React.StrictMode, null, React.createElement(Profile))
-      );
-    </script>
+    <div id="root">${body}</div>
   </body>
 </html>`;
 
-  return new Response(html, {
-    headers: { "content-type": "text/html" },
-  });
+    return new Response(html, {
+      headers: { "content-type": "text/html" },
+    });
+  } catch (err) {
+    console.error(err);
+    return new Response(String(err), { status: 500 });
+  }
 });
