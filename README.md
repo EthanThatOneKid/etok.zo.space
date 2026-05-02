@@ -39,6 +39,19 @@ When you make changes to the homepage mirror in this repo:
 
 ---
 
+## Local Development
+
+To develop and test the site locally without necessarily updating spaces, you can use the **[zopack-cli](https://github.com/EthanThatOneKid/zopack-cli)** tool:
+
+```bash
+# Run the local server using Bun from a sibling directory or zopack-cli
+bun ../zopack-cli/index.ts
+```
+
+This starts a local SSR preview of your routes on `http://localhost:5173/`.
+
+---
+
 ## Challenge
 
 Built for the [Zo x Contra Challenge](https://contra.com/community/topic/zocomputerchallenge) (Apr 13–22, 2026).
