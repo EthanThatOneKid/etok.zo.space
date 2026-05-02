@@ -1,7 +1,5 @@
 # etok.zo.space
 
-> **Consolidated with `zo-hub`:** this repo overlaps with `zo-hub` for the homepage route. The active homepage mirror is `zo-hub`, which should reflect the latest deployed `/` route at `https://etok.zo.space`.
-
 - **Live site:** [https://etok.zo.space](https://etok.zo.space)
 - **Zo Space API reference:** [docs.zocomputer.com/api](https://docs.zocomputer.com/api)
 
@@ -24,7 +22,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 
 | Route | Type | Description |
 |-------|------|-------------|
-| `/` | page | Homepage mirror; keep this aligned with `zo-hub/routes/index.ts` |
+| `/` | page | Homepage mirror |
 
 ---
 

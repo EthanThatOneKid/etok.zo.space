@@ -3,7 +3,6 @@
 ## Overview
 
 This top-level directory is a legacy mirror. The canonical local repo is `/home/workspace/code/github.com/EthanThatOneKid/etok.zo.space/`.
-This mirror overlaps with `zo-hub` for the homepage route on [https://etok.zo.space](https://etok.zo.space), so keep it aligned only when mirror maintenance is needed.
 
 ## Architecture
 
@@ -18,7 +17,6 @@ local files (this repo) → update_space_route() → Zo cloud → etok.zo.space
 ## Mirror Status
 
 This repo is no longer the broad canonical mirror for every route.
-Its remaining practical role is as a duplicate homepage mirror that should match `zo-hub`.
 Use the canonical repo under `code/github.com/EthanThatOneKid/etok.zo.space/` for source-of-truth edits.
 
 ## Sync protocol
@@ -33,7 +31,7 @@ For every meaningful update, commit a versioned snapshot so Git history = deploy
 
 | Route | Type | Status |
 |-------|------|--------|
-| `/` | page | live — homepage mirror, should stay aligned with `zo-hub/routes/index.ts` |
+| `/` | page | live — homepage mirror |
 
 ## Related
 
