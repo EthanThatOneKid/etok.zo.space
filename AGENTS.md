@@ -31,7 +31,8 @@ For every meaningful update, commit a versioned snapshot so Git history = deploy
 
 | Route | Type | Status |
 |-------|------|--------|
-| `/` | page | live — homepage mirror |
+| `/` | page | live — homepage mirror, should stay aligned with `zo-hub/routes/index.ts` |
+| `/zocabulary` | page + API | public crowdsourced Zo pun dictionary — includes draft localStorage persistence |
 
 ## Related
 
