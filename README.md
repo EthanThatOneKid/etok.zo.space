@@ -23,6 +23,8 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 | Route | Type | Description |
 |-------|------|-------------|
 | `/` | page | Homepage mirror |
+| `/venture-town` | page | SPARQL-derived 3D venture town |
+| `/zocabulary` | page + API | public crowdsourced Zo pun dictionary — includes draft localStorage persistence |
 
 ---
 
