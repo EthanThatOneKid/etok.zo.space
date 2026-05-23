@@ -23,8 +23,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 | Route | Type | Description |
 |-------|------|-------------|
 | `/` | page | Homepage mirror |
-| `/venture-town` | page | SPARQL-derived 3D venture town |
-| `/zocabulary` | page + API | public crowdsourced Zo pun dictionary — includes draft localStorage persistence |
+
 
 ---
 
@@ -39,16 +38,20 @@ When you make changes to the homepage mirror in this repo:
 
 ---
 
-## Local Development
+## Local development
 
-To develop and test the site locally without necessarily updating spaces, you can use the **[zopack-cli](https://github.com/EthanThatOneKid/zopack-cli)** tool:
+Use **[zopack-cli](https://github.com/EthanThatOneKid/zopack-cli)** to run routes locally:
 
 ```bash
-# Run the local server using Bun from a sibling directory or zopack-cli
-bun ../zopack-cli/index.ts
+cd /path/to/zopack-cli
+bun install
+bun link
+
+cd /path/to/etok.zo.space
+zopack serve
 ```
 
-This starts a local SSR preview of your routes on `http://localhost:5173/`.
+Open `http://localhost:5173/` for the homepage mirror (`routes/index.ts`). Use that port — `zopack serve` defaults to 5173, not 8000.
 
 ---
 

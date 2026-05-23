@@ -1,4 +1,4 @@
-# etok.zo.space — Legacy Mirror Memory
+# etok.zo.space
 
 ## Overview
 
@@ -27,15 +27,23 @@ Use the canonical repo under `code/github.com/EthanThatOneKid/etok.zo.space/` fo
 
 For every meaningful update, commit a versioned snapshot so Git history = deploy history.
 
+## Local serve
+
+Run from the repo root with [zopack-cli](https://github.com/EthanThatOneKid/zopack-cli) linked globally (`bun link` in that repo):
+
+```bash
+zopack serve
+```
+
+Routes live in `routes/` (homepage mirror only).
+
 ## Route inventory
 
 | Route | Type | Status |
 |-------|------|--------|
-| `/` | page | live — homepage mirror, should stay aligned with `zo-hub/routes/index.ts` |
-| `/zocabulary` | page + API | public crowdsourced Zo pun dictionary — includes draft localStorage persistence |
+| `/` | page | live — homepage mirror, should stay aligned with `/code/github.com/EthanThatOneKid/etok.me/routes/index.ts` |
 
 ## Related
 
 - [etok.me](https://etok.me) — main portfolio (external)
-- [book repo](https://github.com/EthanThatOneKid/book) — knowledge base, meeting notes, zets
 - [Zo x Contra Challenge](https://contra.com/community/topic/zocomputerchallenge)
