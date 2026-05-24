@@ -2,46 +2,39 @@
 
 ## Overview
 
-This top-level directory is a legacy mirror. The canonical local repo is `/home/workspace/code/github.com/EthanThatOneKid/etok.zo.space/`.
+This repo is the Git source of truth for [etok.zo.space](https://etok.zo.space). Route source lives in [`etok.zopack.md`](etok.zopack.md).
 
 ## Architecture
 
-Zo.space routes run in Zo's cloud infrastructure — **NOT on the local filesystem**. Routes are managed exclusively via the Zo Space API (`update_space_route()`, etc.).
+Zo.space routes run in Zo's cloud infrastructure — **not on the local filesystem**. Routes are deployed via the Zo Space API (`update_space_route()`, etc.).
 
 ```
-local files (this repo) → update_space_route() → Zo cloud → etok.zo.space
-     ↑                                                        ↓
-  source of truth                                    live running site
+etok.zopack.md (this repo) → update_space_route() → Zo cloud → etok.zo.space
+         ↑                                                        ↓
+   source of truth                                      live running site
 ```
-
-## Mirror Status
-
-This repo is no longer the broad canonical mirror for every route.
-Use the canonical repo under `code/github.com/EthanThatOneKid/etok.zo.space/` for source-of-truth edits.
 
 ## Sync protocol
 
-1. **Develop locally** — edit route files in this repo
+1. **Develop locally** — edit route code in `etok.zopack.md`
 2. **Commit** — `git add && git commit && git push`
-3. **Sync to Zo** — call `update_space_route()` with the new code
+3. **Sync to Zo** — call `update_space_route()` with the route code from the pack (or use `zopack import` to get the JSON plan)
 
-For every meaningful update, commit a versioned snapshot so Git history = deploy history.
+For every meaningful update, commit a versioned snapshot so Git history matches deploy history.
 
 ## Local serve
 
 Run from the repo root with [zopack-cli](https://github.com/EthanThatOneKid/zopack-cli) linked globally (`bun link` in that repo):
 
 ```bash
-zopack serve
+zopack serve --file etok.zopack.md
 ```
-
-Routes live in `routes/` (homepage mirror only).
 
 ## Route inventory
 
 | Route | Type | Status |
 |-------|------|--------|
-| `/` | page | live — homepage mirror, should stay aligned with `/code/github.com/EthanThatOneKid/etok.me/routes/index.ts` |
+| `/` | page | live — homepage mirror |
 
 ## Related
 

@@ -1,3 +1,22 @@
+---
+format: zopack
+version: "1.0"
+name: etok
+description: "Ethan Davidson zo.space profile"
+author: etok.zo.computer
+routes: 1
+exported: 2026-05-24
+---
+
+# etok
+
+Ethan Davidson zo.space profile
+
+## Routes
+
+### `/` (page, public)
+
+```tsx
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const GRID_COLS = 96;
@@ -82,20 +101,20 @@ function GameOfLifeGrid({ mouseCell }: { mouseCell: [number, number] | null }) {
 }
 
 const projects = [
-  { name: "Wazoo Technologies", desc: "AI memory & world-models — the hippocampus for AI agents", url: "https://wazoo.dev", emoji: "🦉", color: "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" },
-  { name: "FartLabs", desc: "Type-safe HTML rendering packages for TypeScript & JSX", url: "https://github.com/FartLabs", emoji: "💨", color: "bg-green-500/20 border-green-500/30 text-green-300" },
-  { name: "FullyHacks", desc: "Annual hackathon building the CSUF community", url: "https://fullyhacks.com", emoji: "⚡", color: "bg-teal-500/20 border-teal-500/30 text-teal-300" },
-  { name: "acmcsufoss", desc: "Open-source club keeping CSUF's community weird", url: "https://github.com/acmcsufoss", emoji: "🪴", color: "bg-lime-500/20 border-lime-500/30 text-lime-300" },
+  { name: "Wazoo Technologies", desc: "AI memory & world-models ??? the hippocampus for AI agents", url: "https://wazoo.dev", emoji: "????", color: "bg-emerald-500/20 border-emerald-500/30 text-emerald-300" },
+  { name: "FartLabs", desc: "Type-safe HTML rendering packages for TypeScript & JSX", url: "https://github.com/FartLabs", emoji: "????", color: "bg-green-500/20 border-green-500/30 text-green-300" },
+  { name: "FullyHacks", desc: "Annual hackathon building the CSUF community", url: "https://fullyhacks.com", emoji: "???", color: "bg-teal-500/20 border-teal-500/30 text-teal-300" },
+  { name: "acmcsufoss", desc: "Open-source club keeping CSUF's community weird", url: "https://github.com/acmcsufoss", emoji: "????", color: "bg-lime-500/20 border-lime-500/30 text-lime-300" },
 ];
 
 const links = [
-  { label: "GitHub", url: "https://github.com/EthanThatOneKid", icon: "🐙" },
-  { label: "X / Twitter", url: "https://x.com/etok_me", icon: "✦" },
-  { label: "LinkedIn", url: "https://linkedin.com/in/etok", icon: "◎" },
-  { label: "Zo Plays Pokemon", url: "/zoplayspokemon", icon: "🎮" },
-  { label: "Portfolio", url: "https://etok.me", icon: "☆" },
-  { label: "Resume", url: "https://etok.me/resume", icon: "📎" },
-  { label: "Book a call", url: "https://etok.me/meet", icon: "☎" },
+  { label: "GitHub", url: "https://github.com/EthanThatOneKid", icon: "????" },
+  { label: "X / Twitter", url: "https://x.com/etok_me", icon: "???" },
+  { label: "LinkedIn", url: "https://linkedin.com/in/etok", icon: "???" },
+  { label: "Zo Plays Pokemon", url: "/zoplayspokemon", icon: "????" },
+  { label: "Portfolio", url: "https://etok.me", icon: "???" },
+  { label: "Resume", url: "https://etok.me/resume", icon: "????" },
+  { label: "Book a call", url: "https://etok.me/meet", icon: "???" },
 ];
 
 function usePSTClock() {
@@ -156,13 +175,13 @@ export default function Profile() {
           <p className="text-zinc-300 max-w-md mx-auto leading-relaxed">
             AI engineer at{" "}
             <a href="https://wazoo.dev" target="_blank" rel="noopener" className="text-emerald-400 hover:underline">Wazoo</a>
-            {" "}— imagination-driven engineering helping people realize their dreams with software.
+            {" "}??? imagination-driven engineering helping people realize their dreams with software.
           </p>
           <div className="flex items-center justify-center gap-2 text-sm text-zinc-500">
-            <span>🌴</span>
+            <span>????</span>
             <span>Los Angeles, CA</span>
             <span className="text-emerald-700/60">|</span>
-            <span className="font-mono text-emerald-400/70">{pstTime || "—:—:—"} PST</span>
+            <span className="font-mono text-emerald-400/70">{pstTime || "???:???:???"} PST</span>
           </div>
         </div>
 
@@ -188,8 +207,8 @@ export default function Profile() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-emerald-300 hover:bg-emerald-500/30 hover:text-white transition-all font-medium"
           >
-            <span>🌐</span>
-            Try Zo Computer — $10 in free AI credits
+            <span>????</span>
+            Try Zo Computer ??? $10 in free AI credits
           </a>
           <p className="text-xs text-zinc-600 mt-2">
             If the link doesn&apos;t work, try{" "}
@@ -210,7 +229,7 @@ export default function Profile() {
             I like building things that are useful and a little weird. My work lives at the intersection of developer tooling, AI infrastructure, and open-source communities. I previously worked at Google on Hotel Center and Dataplex UI, and now run Wazoo Technologies full-time while maintaining FartLabs and various community projects.
           </p>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            When I&apos;m not shipping code, I&apos;m probably organizing hackathons, breeding Pokémon, or hanging out in the ACM CSUF OSS community.
+            When I&apos;m not shipping code, I&apos;m probably organizing hackathons, breeding Pok??mon, or hanging out in the ACM CSUF OSS community.
           </p>
         </div>
 
@@ -239,14 +258,14 @@ export default function Profile() {
           <h2 className="text-sm font-semibold uppercase tracking-widest text-zinc-500 mb-4">Currently</h2>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <span className="text-emerald-400 mt-0.5">🦉</span>
+              <span className="text-emerald-400 mt-0.5">????</span>
               <div>
                 <p className="text-zinc-200 font-medium">Building Wazoo</p>
-                <p className="text-zinc-500 text-sm">Neuro-symbolic memory layer for AI agents — imagination-driven engineering helping people realize their dreams with software</p>
+                <p className="text-zinc-500 text-sm">Neuro-symbolic memory layer for AI agents ??? imagination-driven engineering helping people realize their dreams with software</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="text-amber-400 mt-0.5">⚡</span>
+              <span className="text-amber-400 mt-0.5">???</span>
               <div>
                 <p className="text-zinc-200 font-medium">Running the community</p>
                 <p className="text-zinc-500 text-sm">FullyHacks, acmcsufoss, FartLabs</p>
@@ -256,7 +275,7 @@ export default function Profile() {
         </div>
 
         <div className="text-center text-zinc-600 text-sm space-y-1">
-          <p>Made with 💜 by Ethan Davidson · {new Date().getFullYear()}</p>
+          <p>Made with ???? by Ethan Davidson ?? {new Date().getFullYear()}</p>
           <p>
             Powered by <a href="https://zo-computer.cello.so/fFG5xDTfXhY" target="_blank" rel="noopener" className="text-emerald-700 hover:text-emerald-500">Zo Computer</a>
           </p>
@@ -266,3 +285,10 @@ export default function Profile() {
     </div>
   );
 }
+```
+
+## Dependencies
+
+**npm packages** (not in default zo.space):
+- `react`
+

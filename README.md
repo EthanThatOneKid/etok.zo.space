@@ -14,7 +14,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
   source of truth        (live running site)
 ```
 
-**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo exists as the mirrored Git representation of that live Zo Space, and should be kept in lockstep with deployed routes.
+**Zo.space routes run in Zo's cloud infrastructure — not on the local filesystem.** This repo stores the route source in [`etok.zopack.md`](etok.zopack.md) and should be kept in lockstep with the live Zo Space.
 
 ---
 
@@ -24,15 +24,15 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 |-------|------|-------------|
 | `/` | page | Homepage mirror |
 
-
 ---
 
 ## Sync workflow
 
-When you make changes to the homepage mirror in this repo:
+When you change the homepage mirror:
 
-1. `git add && git commit && git push`
-2. Run `update_space_route()` from Zo to push the updated code to the cloud
+1. Edit route code in [`etok.zopack.md`](etok.zopack.md) (under `## Routes`)
+2. `git add && git commit && git push`
+3. Run `update_space_route()` from Zo to push the updated code to the cloud
 
 **For each significant update, commit a snapshot** with a version tag so there's a clean history of what ran on the live site and when.
 
@@ -40,7 +40,7 @@ When you make changes to the homepage mirror in this repo:
 
 ## Local development
 
-Use **[zopack-cli](https://github.com/EthanThatOneKid/zopack-cli)** to run routes locally:
+Use **[zopack-cli](https://github.com/EthanThatOneKid/zopack-cli)** to run the pack locally:
 
 ```bash
 cd /path/to/zopack-cli
@@ -48,10 +48,16 @@ bun install
 bun link
 
 cd /path/to/etok.zo.space
-zopack serve
+zopack serve --file etok.zopack.md
 ```
 
-Open `http://localhost:5173/` for the homepage mirror (`routes/index.ts`). Use that port — `zopack serve` defaults to 5173, not 8000.
+Open `http://localhost:5173/` for the homepage mirror. Use that port — `zopack serve` defaults to 5173.
+
+To preview the deployment plan before syncing to Zo:
+
+```bash
+zopack import --file etok.zopack.md --handle etok --preview
+```
 
 ---
 

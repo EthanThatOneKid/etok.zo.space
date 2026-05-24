@@ -1,2 +1,4 @@
 node_modules/
 .zopack-data/
+.zopack-workspace/
+.zopack-build/
