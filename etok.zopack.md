@@ -4,7 +4,7 @@ version: "1.0"
 name: etok
 description: "Ethan Davidson zo.space profile"
 author: etok.zo.computer
-routes: 1
+routes: 4
 exported: 2026-05-24
 ---
 
@@ -287,8 +287,13 @@ export default function Profile() {
 }
 ```
 
+## Mirrored routes
+
+- `/watchlist` (page, public) — Shared, collaborative movies watchlist. UI: `routes/watch-party/watchlist.tsx`.
+- `/api/watchlist` (api) — CRUD + reorder for the watchlist, persisted to `watch-party/watchlist.json`. Source: `routes/watch-party/api-watchlist.ts`.
+- `/api/watchlist-search` (api) — Movie title search, proxies OMDb (preferred) or TMDb. Source: `routes/watch-party/api-watchlist-search.ts`.
+
 ## Dependencies
 
 **npm packages** (not in default zo.space):
 - `react`
-
