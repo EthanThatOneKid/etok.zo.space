@@ -23,6 +23,11 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 | Route | Type | Description |
 |-------|------|-------------|
 | `/` | page | Homepage mirror |
+| `/watchlist` | page | Shared movies watchlist (collaborative) |
+| `/api/watchlist` | api | CRUD + reorder for the watchlist |
+| `/api/watchlist-search` | api | Movie title search (OMDb / TMDb proxy) |
+| `/clown` | page | Request-metadata probe |
+| `/api/clown-probe` | api | Request-metadata probe endpoint |
 
 ---
 

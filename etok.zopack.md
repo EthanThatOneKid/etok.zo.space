@@ -4,8 +4,8 @@ version: "1.0"
 name: etok
 description: "Ethan Davidson zo.space profile"
 author: etok.zo.computer
-routes: 1
-exported: 2026-05-24
+routes: 6
+exported: 2026-06-16
 ---
 
 # etok
@@ -287,8 +287,168 @@ export default function Profile() {
 }
 ```
 
+### `/clown` (page, public)
+
+```tsx
+import { useEffect, useState } from "react";
+
+type ProbeResult = {
+  method: string;
+  path: string;
+  userAgent: string | null;
+  acceptLanguage: string | null;
+  cookieNames: string[];
+  authCookiePresent: boolean;
+  identityHeaderNames: string[];
+  note: string;
+};
+
+const REQUEST_HEADERS = [
+  "authorization",
+  "cookie",
+  "user-agent",
+  "accept-language",
+  "x-forwarded-for",
+  "x-real-ip",
+  "x-zo-user",
+  "x-user-id",
+  "x-session-id",
+  "x-authenticated-user",
+  "x-identity",
+  "x-zo-identity",
+] as const;
+
+function prettyName(name: string) {
+  return name
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("-");
+}
+
+export default function ClownProbePage() {
+  const [result, setResult] = useState<ProbeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const response = await fetch("/api/clown-probe", {
+          headers: { Accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`Probe failed with ${response.status}`);
+        const payload = (await response.json()) as ProbeResult;
+        if (!cancelled) setResult(payload);
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Unknown error");
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-zinc-50">
+      <div className="mx-auto flex min-h-screen max-w-4xl flex-col gap-8 px-6 py-12">
+        <header className="space-y-3">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Zo identity probe</p>
+          <h1 className="text-4xl font-bold tracking-tight">/clown</h1>
+          <p className="max-w-2xl text-zinc-400">
+            This page asks the server what request metadata is visible when a Zo visitor loads the page.
+            It intentionally avoids showing raw cookie values or session IDs.
+          </p>
+        </header>
+
+        <section className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">Probe result</h2>
+            {error ? (
+              <p className="text-red-300">{error}</p>
+            ) : result ? (
+              <dl className="space-y-3 text-sm">
+                <div className="flex justify-between gap-4"><dt className="text-zinc-500">Method</dt><dd>{result.method}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-zinc-500">Path</dt><dd>{result.path}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-zinc-500">Auth cookie seen</dt><dd>{result.authCookiePresent ? "yes" : "no"}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-zinc-500">Cookie names</dt><dd>{result.cookieNames.length ? result.cookieNames.join(", ") : "none"}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-zinc-500">Identity headers</dt><dd>{result.identityHeaderNames.length ? result.identityHeaderNames.join(", ") : "none"}</dd></div>
+                <div className="pt-2 text-zinc-400">{result.note}</div>
+              </dl>
+            ) : (
+              <p className="text-zinc-400">Loading probe…</p>
+            )}
+          </div>
+
+          <aside className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">Headers checked</h2>
+            <ul className="space-y-2 text-sm text-zinc-300">
+              {REQUEST_HEADERS.map((header) => (
+                <li key={header} className="flex items-center justify-between gap-3 border-b border-white/5 pb-2 last:border-b-0 last:pb-0">
+                  <span>{prettyName(header)}</span>
+                  <span className="text-zinc-500">observed if present</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </section>
+      </div>
+    </main>
+  );
+}
+```
+
+### `/api/clown-probe` (api, public)
+
+```ts
+import type { Context } from "hono";
+
+const IDENTITY_HEADER_CANDIDATES = [
+  "x-zo-user",
+  "x-user-id",
+  "x-session-id",
+  "x-authenticated-user",
+  "x-identity",
+  "x-zo-identity",
+];
+
+function parseCookieNames(cookieHeader: string | null): string[] {
+  if (!cookieHeader) return [];
+  return cookieHeader
+    .split(";")
+    .map((chunk) => chunk.trim())
+    .map((chunk) => chunk.split("=")[0]?.trim())
+    .filter((name): name is string => Boolean(name));
+}
+
+export default (c: Context) => {
+  const cookieHeader = c.req.header("cookie");
+  const cookieNames = parseCookieNames(cookieHeader);
+  const identityHeaderNames = IDENTITY_HEADER_CANDIDATES.filter((name) => Boolean(c.req.header(name)));
+
+  return c.json({
+    method: c.req.method,
+    path: c.req.path,
+    userAgent: c.req.header("user-agent") ?? null,
+    acceptLanguage: c.req.header("accept-language") ?? null,
+    cookieNames,
+    authCookiePresent: cookieNames.some((name) => /session|auth|token|sid|zo/i.test(name)),
+    identityHeaderNames,
+    note: "Raw cookie values are intentionally omitted. If Zo exposes an identity header in this environment, it should appear above.",
+  });
+};
+```
+
+## Mirrored routes
+
+- `/watchlist` (page, public) — Shared, collaborative movies watchlist. UI: `routes/watch-party/watchlist.tsx`.
+- `/api/watchlist` (api) — CRUD + reorder for the watchlist, persisted to `watch-party/watchlist.json`. Source: `routes/watch-party/api-watchlist.ts`.
+- `/api/watchlist-search` (api) — Movie title search, proxies OMDb (preferred) or TMDb. Source: `routes/watch-party/api-watchlist-search.ts`.
+- `/clown` (page, public) — Request-metadata probe page.
+- `/api/clown-probe` (api, public) — Probe endpoint for request metadata.
 ## Dependencies
 
 **npm packages** (not in default zo.space):
 - `react`
-
