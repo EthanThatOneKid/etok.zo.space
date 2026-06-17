@@ -409,7 +409,7 @@ function renderHtml(payload: {
   origin: string | null;
   host: string | null;
   forwardedHost: string | null;
-  zoClientAuth: string | null;
+  zoClientAuthPresent: boolean;
   zoSitePort: string | null;
   decodedZoClientAuth: {
     present: boolean;
@@ -500,7 +500,10 @@ function renderHtml(payload: {
               { label: "Origin", value: payload.origin ?? "none" },
               { label: "Host", value: payload.host ?? "none" },
               { label: "X-Forwarded-Host", value: payload.forwardedHost ?? "none" },
-              { label: "X-Zo-Client-Auth", value: payload.zoClientAuth ?? "none" },
+              {
+                label: "X-Zo-Client-Auth",
+                value: payload.zoClientAuthPresent ? "present (decoded below)" : "none",
+              },
               { label: "X-Zo-Site-Port", value: payload.zoSitePort ?? "none" },
             ])}
           </section>
@@ -575,7 +578,7 @@ export default (c: Context) => {
     origin: c.req.header("origin") ?? null,
     host: c.req.header("host") ?? null,
     forwardedHost: c.req.header("x-forwarded-host") ?? null,
-    zoClientAuth,
+    zoClientAuthPresent: Boolean(zoClientAuth),
     zoSitePort: c.req.header("x-zo-site-port") ?? null,
     decodedZoClientAuth: {
       present: Boolean(decodedZoClientAuth),
