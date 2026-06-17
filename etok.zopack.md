@@ -342,6 +342,7 @@ const IDENTITY_HEADER_CANDIDATES = [
   "x-identity",
   "x-zo-identity",
   "x-session-id",
+  "x-zo-client-auth",
 ] as const;
 
 function parseCookieNames(cookieHeader: string | null): string[] {
@@ -384,6 +385,8 @@ function renderHtml(payload: {
   origin: string | null;
   host: string | null;
   forwardedHost: string | null;
+  zoClientAuth: string | null;
+  zoSitePort: string | null;
   cookieNames: string[];
   identitySignals: Array<{ name: string; present: boolean; value: string | null }>;
   requestHeaderNames: string[];
@@ -455,6 +458,8 @@ function renderHtml(payload: {
               { label: "Origin", value: payload.origin ?? "none" },
               { label: "Host", value: payload.host ?? "none" },
               { label: "X-Forwarded-Host", value: payload.forwardedHost ?? "none" },
+              { label: "X-Zo-Client-Auth", value: payload.zoClientAuth ?? "none" },
+              { label: "X-Zo-Site-Port", value: payload.zoSitePort ?? "none" },
             ])}
           </section>
 
@@ -505,6 +510,8 @@ export default (c: Context) => {
     origin: c.req.header("origin") ?? null,
     host: c.req.header("host") ?? null,
     forwardedHost: c.req.header("x-forwarded-host") ?? null,
+    zoClientAuth: c.req.header("x-zo-client-auth") ?? null,
+    zoSitePort: c.req.header("x-zo-site-port") ?? null,
     cookieNames,
     authCookiePresent: cookieNames.some((name) => /session|auth|token|sid|zo/i.test(name)),
     identityHeaderNames: identitySignals.filter((signal) => signal.present).map((signal) => signal.name),
