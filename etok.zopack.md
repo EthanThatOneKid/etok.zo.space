@@ -4,8 +4,8 @@ version: "1.0"
 name: etok
 description: "Ethan Davidson zo.space profile"
 author: etok.zo.computer
-routes: 4
-exported: 2026-05-24
+routes: 6
+exported: 2026-06-17
 ---
 
 # etok
@@ -285,6 +285,240 @@ export default function Profile() {
     </div>
   );
 }
+```
+
+### `/clown` (page, public)
+
+```tsx
+export default function ClownProbePage() {
+  return (
+    <main className="min-h-screen bg-zinc-950 text-zinc-50">
+      <div className="mx-auto flex min-h-screen max-w-5xl flex-col gap-6 px-6 py-12">
+        <header className="space-y-3">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Zo identity probe</p>
+          <h1 className="text-4xl font-bold tracking-tight">/clown</h1>
+          <p className="max-w-3xl text-zinc-400">
+            This page embeds the probe as a document request so you can manually test the authenticated browser state.
+            If Zo exposes an identity signal on this request, it should appear in the embedded result.
+          </p>
+        </header>
+
+        <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+            <iframe
+              src="/api/clown-probe?format=html"
+              title="Clown probe"
+              className="h-[72vh] w-full rounded-xl border-0 bg-zinc-950"
+            />
+          </div>
+
+          <aside className="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-zinc-300">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">How to test</h2>
+            <ol className="mt-4 space-y-3 list-decimal pl-5">
+              <li>Open this route while signed into Zo on your device.</li>
+              <li>Check whether the embedded probe shows a Zo-specific user or identity header.</li>
+              <li>If the iframe stays blank, open the probe directly: <a href="/api/clown-probe?format=html" className="text-emerald-300 underline">/api/clown-probe?format=html</a>.</li>
+            </ol>
+            <p className="mt-4 text-zinc-500">
+              Cookie values stay redacted. The probe only reports header names plus any non-cookie identity signal it can see.
+            </p>
+          </aside>
+        </section>
+      </div>
+    </main>
+  );
+}
+```
+
+### `/api/clown-probe` (api, public)
+
+```tsx
+import type { Context } from "hono";
+
+const IDENTITY_HEADER_CANDIDATES = [
+  "x-zo-user",
+  "x-user-id",
+  "x-authenticated-user",
+  "x-identity",
+  "x-zo-identity",
+  "x-session-id",
+] as const;
+
+function parseCookieNames(cookieHeader: string | null): string[] {
+  if (!cookieHeader) return [];
+  return cookieHeader
+    .split(";")
+    .map((chunk) => chunk.trim())
+    .map((chunk) => chunk.split("=")[0]?.trim())
+    .filter((name): name is string => Boolean(name));
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function toRows(entries: Array<{ label: string; value: string }>) {
+  return entries
+    .map(
+      ({ label, value }) => `
+        <div class="row">
+          <div class="label">${escapeHtml(label)}</div>
+          <div class="value">${escapeHtml(value)}</div>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderHtml(payload: {
+  method: string;
+  path: string;
+  userAgent: string | null;
+  acceptLanguage: string | null;
+  referer: string | null;
+  origin: string | null;
+  host: string | null;
+  forwardedHost: string | null;
+  cookieNames: string[];
+  identitySignals: Array<{ name: string; present: boolean; value: string | null }>;
+  requestHeaderNames: string[];
+}) {
+  return `<!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Clown probe</title>
+      <style>
+        :root { color-scheme: dark; }
+        body {
+          margin: 0;
+          font-family: ui-sans-serif, system-ui, sans-serif;
+          background: #09090b;
+          color: #fafafa;
+        }
+        .wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+        .card {
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.04);
+          border-radius: 20px;
+          padding: 20px;
+          margin-top: 16px;
+        }
+        .row {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          padding: 10px 0;
+        }
+        .row:last-child { border-bottom: 0; }
+        .label { color: #a1a1aa; }
+        .value { text-align: right; color: #f4f4f5; word-break: break-word; }
+        .grid { display: grid; gap: 16px; }
+        @media (min-width: 900px) { .grid { grid-template-columns: 1.2fr 0.8fr; } }
+        .muted { color: #a1a1aa; }
+        code, pre { font-family: ui-monospace, SFMono-Regular, monospace; }
+        .pill {
+          display: inline-flex;
+          border: 1px solid rgba(16,185,129,0.35);
+          background: rgba(16,185,129,0.12);
+          color: #86efac;
+          border-radius: 999px;
+          padding: 6px 10px;
+          font-size: 12px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <div class="pill">Probe rendered from the request itself</div>
+        <h1 style="font-size: 40px; margin: 12px 0 0;">/clown</h1>
+        <p class="muted" style="max-width: 760px; line-height: 1.6;">
+          This view comes from the document request, not a fetch. It redacts cookie values and shows any request header
+          that looks like a Zo identity signal.
+        </p>
+        <div class="grid">
+          <section class="card">
+            <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Request snapshot</h2>
+            ${toRows([
+              { label: "Method", value: payload.method },
+              { label: "Path", value: payload.path },
+              { label: "User agent", value: payload.userAgent ?? "none" },
+              { label: "Accept-Language", value: payload.acceptLanguage ?? "none" },
+              { label: "Referer", value: payload.referer ?? "none" },
+              { label: "Origin", value: payload.origin ?? "none" },
+              { label: "Host", value: payload.host ?? "none" },
+              { label: "X-Forwarded-Host", value: payload.forwardedHost ?? "none" },
+            ])}
+          </section>
+
+          <section class="card">
+            <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Identity signals</h2>
+            ${toRows(
+              payload.identitySignals.map((signal) => ({
+                label: signal.name,
+                value: signal.present ? signal.value ?? "present" : "absent",
+              }))
+            )}
+          </section>
+        </div>
+
+        <div class="card">
+          <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Cookie names</h2>
+          <p style="margin: 0; line-height: 1.7;">${payload.cookieNames.length ? escapeHtml(payload.cookieNames.join(", ")) : "none"}</p>
+        </div>
+
+        <div class="card">
+          <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Header names seen</h2>
+          <pre style="margin: 0; white-space: pre-wrap; line-height: 1.7;">${escapeHtml(payload.requestHeaderNames.join("\n"))}</pre>
+        </div>
+      </div>
+    </body>
+  </html>`;
+}
+
+export default (c: Context) => {
+  const accept = c.req.header("accept") ?? "";
+  const cookieHeader = c.req.header("cookie");
+  const cookieNames = parseCookieNames(cookieHeader);
+  const identitySignals = IDENTITY_HEADER_CANDIDATES.map((name) => {
+    const value = c.req.header(name);
+    const visibleValue = value
+      ? name === "x-session-id"
+        ? "[redacted]"
+        : value
+      : null;
+    return { name, present: Boolean(value), value: visibleValue };
+  });
+  const payload = {
+    method: c.req.method,
+    path: c.req.path,
+    userAgent: c.req.header("user-agent") ?? null,
+    acceptLanguage: c.req.header("accept-language") ?? null,
+    referer: c.req.header("referer") ?? null,
+    origin: c.req.header("origin") ?? null,
+    host: c.req.header("host") ?? null,
+    forwardedHost: c.req.header("x-forwarded-host") ?? null,
+    cookieNames,
+    authCookiePresent: cookieNames.some((name) => /session|auth|token|sid|zo/i.test(name)),
+    identityHeaderNames: identitySignals.filter((signal) => signal.present).map((signal) => signal.name),
+    identitySignals,
+    requestHeaderNames: Array.from(c.req.raw.headers.keys()),
+    note: "Cookie values are intentionally omitted. Any Zo identity header that reaches this request will show up in the identity signals list.",
+  };
+
+  if (accept.includes("application/json")) {
+    return c.json(payload);
+  }
+
+  return c.html(renderHtml(payload));
+};
 ```
 
 ## Mirrored routes
