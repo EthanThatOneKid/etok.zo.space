@@ -363,6 +363,30 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+function decodeBase64Url(value: string) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
+  return Buffer.from(padded, "base64").toString("utf8");
+}
+
+function tryDecodeJson<T>(value: string): T | null {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
+  }
+}
+
+function decodeJwt(token: string | null) {
+  if (!token) return null;
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  const header = tryDecodeJson<Record<string, unknown>>(decodeBase64Url(parts[0]));
+  const payload = tryDecodeJson<Record<string, unknown>>(decodeBase64Url(parts[1]));
+  if (!header || !payload) return null;
+  return { header, payload };
+}
+
 function toRows(entries: Array<{ label: string; value: string }>) {
   return entries
     .map(
@@ -387,10 +411,28 @@ function renderHtml(payload: {
   forwardedHost: string | null;
   zoClientAuth: string | null;
   zoSitePort: string | null;
+  decodedZoClientAuth: {
+    present: boolean;
+    header: Record<string, unknown> | null;
+    payload: Record<string, unknown> | null;
+    issuedAt: string | null;
+    expiresAt: string | null;
+    lifetimeMinutes: string | null;
+  };
   cookieNames: string[];
   identitySignals: Array<{ name: string; present: boolean; value: string | null }>;
   requestHeaderNames: string[];
 }) {
+  const claimValue = (value: unknown) => {
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return String(value);
+    if (typeof value === "boolean") return value ? "true" : "false";
+    if (value == null) return "none";
+    return JSON.stringify(value);
+  };
+
+  const decodedClaims = payload.decodedZoClientAuth;
+
   return `<!doctype html>
   <html lang="en">
     <head>
@@ -483,6 +525,25 @@ function renderHtml(payload: {
           <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Header names seen</h2>
           <pre style="margin: 0; white-space: pre-wrap; line-height: 1.7;">${escapeHtml(payload.requestHeaderNames.join("\n"))}</pre>
         </div>
+
+        <div class="card">
+          <h2 style="margin: 0 0 16px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #71717a;">Decoded X-Zo-Client-Auth</h2>
+          ${
+            decodedClaims.present && decodedClaims.payload
+              ? toRows([
+                  { label: "Token present", value: "yes" },
+                  { label: "Algorithm", value: claimValue(decodedClaims.header?.alg) },
+                  { label: "Key ID", value: claimValue(decodedClaims.header?.kid) },
+                  { label: "Host key", value: claimValue(decodedClaims.payload.host_key) },
+                  { label: "Issuer", value: claimValue(decodedClaims.payload.iss) },
+                  { label: "Audience", value: claimValue(decodedClaims.payload.aud) },
+                  { label: "Issued at", value: decodedClaims.issuedAt ?? "none" },
+                  { label: "Expires at", value: decodedClaims.expiresAt ?? "none" },
+                  { label: "Lifetime", value: decodedClaims.lifetimeMinutes ?? "none" },
+                ])
+              : '<p style="margin: 0; line-height: 1.7;" class="muted">No decodable token was present.</p>'
+          }
+        </div>
       </div>
     </body>
   </html>`;
@@ -492,13 +553,17 @@ export default (c: Context) => {
   const accept = c.req.header("accept") ?? "";
   const cookieHeader = c.req.header("cookie");
   const cookieNames = parseCookieNames(cookieHeader);
+  const zoClientAuth = c.req.header("x-zo-client-auth") ?? null;
+  const decodedZoClientAuth = decodeJwt(zoClientAuth);
+  const issuedAt = decodedZoClientAuth?.payload?.iat;
+  const expiresAt = decodedZoClientAuth?.payload?.exp;
+  const lifetimeMinutes =
+    typeof issuedAt === "number" && typeof expiresAt === "number"
+      ? ((expiresAt - issuedAt) / 60).toFixed(1)
+      : null;
   const identitySignals = IDENTITY_HEADER_CANDIDATES.map((name) => {
     const value = c.req.header(name);
-    const visibleValue = value
-      ? name === "x-session-id"
-        ? "[redacted]"
-        : value
-      : null;
+    const visibleValue = value ? (name === "x-session-id" ? "[redacted]" : "present") : null;
     return { name, present: Boolean(value), value: visibleValue };
   });
   const payload = {
@@ -510,8 +575,16 @@ export default (c: Context) => {
     origin: c.req.header("origin") ?? null,
     host: c.req.header("host") ?? null,
     forwardedHost: c.req.header("x-forwarded-host") ?? null,
-    zoClientAuth: c.req.header("x-zo-client-auth") ?? null,
+    zoClientAuth,
     zoSitePort: c.req.header("x-zo-site-port") ?? null,
+    decodedZoClientAuth: {
+      present: Boolean(decodedZoClientAuth),
+      header: decodedZoClientAuth?.header ?? null,
+      payload: decodedZoClientAuth?.payload ?? null,
+      issuedAt: typeof issuedAt === "number" ? new Date(issuedAt * 1000).toISOString() : null,
+      expiresAt: typeof expiresAt === "number" ? new Date(expiresAt * 1000).toISOString() : null,
+      lifetimeMinutes,
+    },
     cookieNames,
     authCookiePresent: cookieNames.some((name) => /session|auth|token|sid|zo/i.test(name)),
     identityHeaderNames: identitySignals.filter((signal) => signal.present).map((signal) => signal.name),
