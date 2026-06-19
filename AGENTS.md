@@ -35,6 +35,8 @@ zopack serve --file etok.zopack.md
 | Route | Type | Status |
 |-------|------|--------|
 | `/` | page | live — homepage mirror |
+| `/second-brain-build-hour` | page | private — slide-deck meeting plan |
+| `/second-brain-run-of-show` | page | private — scannable companion agenda |
 
 ## Related
 

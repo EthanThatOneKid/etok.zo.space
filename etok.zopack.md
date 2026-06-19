@@ -915,6 +915,142 @@ export default function SecondBrainBuildHourDeck() {
 }
 ```
 
+### `/second-brain-run-of-show` (page, private)
+
+```tsx
+const blocks = [
+  {
+    time: "0–5 min",
+    title: "Open with the premise",
+    goal: "Say what the session is and why it matters.",
+    say: "We’re using Zo to show how a second brain can stay alive, not just organized.",
+  },
+  {
+    time: "5–15 min",
+    title: "Show the target outcome",
+    goal: "Give viewers the destination before the build starts.",
+    say: "The end state is a living company brain that keeps capturing, structuring, and resurfacing context.",
+  },
+  {
+    time: "15–35 min",
+    title: "Live demo in Zo",
+    goal: "Spend most of the hour on the capability itself.",
+    say: "Watch one prompt turn into recurring capture, retrieval, and synthesis.",
+  },
+  {
+    time: "35–50 min",
+    title: "Let people follow along",
+    goal: "Make the pattern feel reusable.",
+    say: "If you have one recurring source of notes, this is how you turn it into a system.",
+  },
+  {
+    time: "50–60 min",
+    title: "Q&A and next step",
+    goal: "Land the takeaway cleanly.",
+    say: "If you remember one thing, it’s that Zo can be the place where the brain keeps running.",
+  },
+];
+
+export default function SecondBrainRunOfShow() {
+  return (
+    <main className="min-h-screen bg-[#050816] text-white">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.1),transparent_28%),linear-gradient(180deg,#050816_0%,#04060d_100%)]" />
+      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-4 sm:px-6 lg:px-8">
+        <header className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
+          <div className="text-xs uppercase tracking-[0.35em] text-sky-200/70">Run of show</div>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-4xl">Second brain build hour</h1>
+          <p className="mt-2 max-w-3xl text-sm text-slate-300">
+            Quick, scannable version for the meeting. The guidance is simple: demo Zo first, teach second.
+          </p>
+        </header>
+
+        <section className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Recommendation</div>
+            <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+              <p className="text-lg font-medium text-emerald-50">Spend most of the hour showing capability.</p>
+              <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
+                Use the second-brain framing to orient the audience, but keep the center of gravity on a live Zo demo.
+                A good split is roughly 70–80% capability and 20–30% methodology.
+              </p>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Primary goal</div>
+                <p className="mt-2 text-sm text-slate-200">Show how Zo can power a living second brain.</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Audience takeaway</div>
+                <p className="mt-2 text-sm text-slate-200">One reusable pattern they can copy after the call.</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Best framing</div>
+                <p className="mt-2 text-sm text-slate-200">Zo as the system that keeps the brain alive.</p>
+              </div>
+            </div>
+          </div>
+
+          <aside className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Ask Joanna</div>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+              Should the hour lean more toward showing Zo’s capabilities, or toward teaching second-brain methodology?
+            </p>
+            <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
+              My vote: put the time into the demo and use the methodology only when it helps viewers follow along.
+            </div>
+          </aside>
+        </section>
+
+        <section className="mt-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-xs uppercase tracking-[0.35em] text-slate-400">One-hour flow</div>
+              <h2 className="mt-2 text-xl font-semibold text-white">Simple agenda</h2>
+            </div>
+            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
+              Easy to skim
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-3">
+            {blocks.map((block) => (
+              <div key={block.time} className="grid gap-3 rounded-2xl border border-white/10 bg-black/15 p-4 lg:grid-cols-[120px_1fr_1fr] lg:items-start">
+                <div className="text-sm font-semibold text-sky-200">{block.time}</div>
+                <div>
+                  <p className="text-base font-medium text-white">{block.title}</p>
+                  <p className="mt-1 text-sm text-slate-300">{block.goal}</p>
+                </div>
+                <p className="text-sm leading-relaxed text-slate-200">
+                  <span className="text-slate-400">Say: </span>
+                  {block.say}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">If time gets tight</div>
+            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+              <li>Keep the intro to one minute.</li>
+              <li>Protect the live demo block.</li>
+              <li>Cut theory before you cut the demo.</li>
+            </ul>
+          </div>
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Close with</div>
+            <p className="mt-4 text-sm leading-relaxed text-slate-300">
+              One prompt, one recurring loop, one living brain. That is the cleanest outcome for the hour.
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+```
+
 ## Mirrored routes
 
 - `/watchlist` (page, public) — Shared, collaborative movies watchlist. UI: `routes/watch-party/watchlist.tsx`.
