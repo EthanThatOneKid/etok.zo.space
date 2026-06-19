@@ -4,7 +4,7 @@ version: "1.0"
 name: etok
 description: "Ethan Davidson zo.space profile"
 author: etok.zo.computer
-routes: 6
+routes: 7
 exported: 2026-06-17
 ---
 
@@ -602,6 +602,317 @@ export default (c: Context) => {
 
   return c.html(renderHtml(payload));
 };
+```
+
+### `/second-brain-build-hour` (page, private)
+
+```tsx
+import { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Eye, EyeOff, Sparkles } from "lucide-react";
+
+type Slide = {
+  step: string;
+  kicker: string;
+  title: string;
+  summary: string;
+  bullets: string[];
+  notes: string;
+  accent: string;
+};
+
+const slides: Slide[] = [
+  {
+    step: "01",
+    kicker: "Proposal",
+    title: "Use Zo to power a second brain",
+    summary: "Keep the framing light; make the capability the centerpiece.",
+    bullets: [
+      "The hour should show how Zo turns ideas into a living workflow.",
+      "Second-brain language is the hook, not the whole curriculum.",
+      "The goal is a repeatable demo people can copy immediately.",
+    ],
+    notes:
+      "Open with the thesis: most of the hour should demonstrate what Zo can do, because that is the memorable part. Keep the second-brain framing as context so the audience understands why the demo matters.",
+    accent: "from-emerald-400/25 via-teal-400/12 to-cyan-400/10",
+  },
+  {
+    step: "02",
+    kicker: "Decision",
+    title: "Demo first, teach second",
+    summary: "Spend the hour where it has the highest signal-to-noise ratio.",
+    bullets: [
+      "About 70–80% of the hour: live capability demo.",
+      "About 20–30%: second-brain principles and discussion.",
+      "Use theory only when it helps viewers follow the build.",
+    ],
+    notes:
+      "This is the explicit tradeoff to confirm with Joanna. If the audience leaves with one practical pattern and one clear mental model, the session worked. If it becomes mostly philosophy, it loses the product value.",
+    accent: "from-amber-400/25 via-orange-400/12 to-rose-400/10",
+  },
+  {
+    step: "03",
+    kicker: "Run of show",
+    title: "One hour, five beats",
+    summary: "A simple agenda keeps the session tight and easy to follow.",
+    bullets: [
+      "0–5 min: intro and framing.",
+      "5–15 min: show the target outcome.",
+      "15–35 min: live build in Zo.",
+      "35–50 min: viewer follow-along.",
+      "50–60 min: Q&A and next steps.",
+    ],
+    notes:
+      "This gives the audience enough structure to stay oriented while keeping the live build center stage. The 15–35 minute block is the core of the event.",
+    accent: "from-fuchsia-400/20 via-violet-400/12 to-indigo-400/10",
+  },
+  {
+    step: "04",
+    kicker: "Live build",
+    title: "Build a continual / recursive company brain",
+    summary: "Show the end-to-end loop, not isolated features.",
+    bullets: [
+      "Capture raw inputs from the team.",
+      "Normalize them into a durable knowledge format.",
+      "Retrieve the right context on demand.",
+      "Schedule recurring syntheses so the brain keeps growing.",
+    ],
+    notes:
+      "This is the headline demo: one prompt that starts a living system instead of a one-off artifact. Narrate the loop as capture → structure → retrieval → recurrence.",
+    accent: "from-cyan-400/20 via-sky-400/12 to-blue-400/10",
+  },
+  {
+    step: "05",
+    kicker: "Follow-along",
+    title: "Let viewers adapt the pattern",
+    summary: "Give them a small, concrete step they can copy during the hour.",
+    bullets: [
+      "Have them map one recurring note source.",
+      "Show how to turn it into a prompt-driven workflow.",
+      "Ask them to imagine the same pattern for a team or company.",
+    ],
+    notes:
+      "The follow-along section should feel practical, not abstract. The audience should leave knowing how to reproduce the pattern for their own notes, team updates, or project memory.",
+    accent: "from-lime-400/20 via-emerald-400/12 to-teal-400/10",
+  },
+  {
+    step: "06",
+    kicker: "Ask Joanna",
+    title: "Which half deserves more time?",
+    summary: "Use her judgment to calibrate the event toward the audience.",
+    bullets: [
+      "Should this lean more toward Zo capability or second-brain teaching?",
+      "What would make the session feel useful to Zo’s community?",
+      "Is there one capability she wants singled out as the headline?",
+    ],
+    notes:
+      "This is the direct question you wanted to ask. It keeps the decision open while making your preference clear: the strongest use of time is showing capabilities, with second-brain concepts as framing.",
+    accent: "from-yellow-400/20 via-amber-400/12 to-orange-400/10",
+  },
+  {
+    step: "07",
+    kicker: "Success criteria",
+    title: "Leave with one reusable prompt",
+    summary: "The session succeeds if people can act on it immediately.",
+    bullets: [
+      "One clear prompt that starts the workflow.",
+      "One visible demo of the recurring loop.",
+      "One next step for Zo or the community.",
+    ],
+    notes:
+      "Close by naming the artifact you want to leave behind: a reusable prompt for a living company brain. That is a cleaner outcome than a vague philosophical discussion.",
+    accent: "from-white/15 via-white/10 to-white/5",
+  },
+];
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
+export default function SecondBrainBuildHourDeck() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [showNotes, setShowNotes] = useState(true);
+
+  const slide = slides[currentSlide];
+  const progress = useMemo(() => ((currentSlide + 1) / slides.length) * 100, [currentSlide]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown") {
+        event.preventDefault();
+        setCurrentSlide((index) => clamp(index + 1, 0, slides.length - 1));
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        setCurrentSlide((index) => clamp(index - 1, 0, slides.length - 1));
+      }
+      if (event.key.toLowerCase() === "n") {
+        setShowNotes((value) => !value);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-[#050816] text-white">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.12),transparent_30%),linear-gradient(180deg,#050816_0%,#04060d_100%)]" />
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 sm:px-6 lg:px-8">
+        <header className="flex flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-sky-200/70">
+              <Sparkles className="h-4 w-4" />
+              Run of show
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Zo build hour: second brains</h1>
+            <p className="max-w-3xl text-sm text-slate-300">
+              Slide-deck version of the meeting plan, with speaker notes you can toggle during the presentation.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <button
+              type="button"
+              onClick={() => setShowNotes((value) => !value)}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2 text-white transition hover:bg-white/15"
+            >
+              {showNotes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showNotes ? "Hide notes" : "Show notes"}
+            </button>
+            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-slate-300">
+              {currentSlide + 1} / {slides.length}
+            </div>
+          </div>
+        </header>
+
+        <div className={`mt-4 grid flex-1 gap-4 ${showNotes ? "lg:grid-cols-[220px_minmax(0,1fr)_340px]" : "lg:grid-cols-[220px_minmax(0,1fr)]"}`}>
+          <aside className="rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur-xl">
+            <div className="mb-3 flex items-center justify-between px-2 text-xs uppercase tracking-[0.3em] text-slate-400">
+              <span>Slides</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <div className="space-y-2">
+              {slides.map((entry, index) => {
+                const active = index === currentSlide;
+                return (
+                  <button
+                    key={entry.step}
+                    type="button"
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-full rounded-2xl border px-3 py-3 text-left transition ${
+                      active
+                        ? "border-emerald-400/40 bg-emerald-400/10"
+                        : "border-white/10 bg-black/15 hover:border-white/20 hover:bg-white/5"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs uppercase tracking-[0.35em] text-slate-400">{entry.step}</span>
+                      <span className={`text-[11px] font-medium ${active ? "text-emerald-300" : "text-slate-500"}`}>
+                        {entry.kicker}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-sm font-medium leading-snug text-white">{entry.title}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </aside>
+
+          <section className="rounded-[2rem] border border-white/10 bg-[rgba(8,12,24,0.88)] p-5 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl">
+            <div className={`rounded-[1.75rem] border border-white/10 bg-gradient-to-br ${slide.accent} p-[1px]`}>
+              <div className="rounded-[1.7rem] bg-[#08101f]/95 p-6 sm:p-8">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.4em] text-slate-400">{slide.kicker}</div>
+                    <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">{slide.title}</h2>
+                  </div>
+                  <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right text-sm text-slate-300 sm:block">
+                    <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Slide</div>
+                    <div className="mt-1 text-xl font-semibold text-white">{slide.step}</div>
+                  </div>
+                </div>
+
+                <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">{slide.summary}</p>
+
+                <div className="mt-8 grid gap-3">
+                  {slide.bullets.map((bullet) => (
+                    <div key={bullet} className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.45)]" />
+                      <p className="text-sm leading-relaxed text-slate-200 sm:text-base">{bullet}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.32em] text-slate-500">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Arrow keys navigate</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">N toggles notes</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Private planning deck</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </section>
+
+          {showNotes ? (
+            <aside className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Speaker notes</div>
+                  <h3 className="mt-2 text-xl font-semibold text-white">Context for this slide</h3>
+                </div>
+                <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-slate-300">
+                  {slide.step}
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-4 text-sm leading-relaxed text-slate-300">
+                <p>{slide.notes}</p>
+                <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-emerald-50">
+                  <p className="text-xs uppercase tracking-[0.3em] text-emerald-200/80">Use this slide to say</p>
+                  <p className="mt-2">
+                    We want Zo to be the thing people can build their second brain on — not just a place to talk about
+                    second brains.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Current emphasis</p>
+                  <p className="mt-2 text-slate-200">
+                    Show capability first. Teach methodology only when it makes the demo clearer.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((index) => clamp(index - 1, 0, slides.length - 1))}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/15"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Prev
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((index) => clamp(index + 1, 0, slides.length - 1))}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/15"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </aside>
+          ) : null}
+        </div>
+      </div>
+    </main>
+  );
+}
 ```
 
 ## Mirrored routes
