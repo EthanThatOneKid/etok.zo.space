@@ -623,103 +623,114 @@ type Slide = {
 const slides: Slide[] = [
   {
     step: "01",
-    kicker: "Proposal",
+    kicker: "Overview",
     title: "Use Zo to power a second brain",
-    summary: "Keep the framing light; make the capability the centerpiece.",
+    summary: "Frame the event as a live demo of a PKMS, not a lecture on note-taking.",
     bullets: [
-      "The hour should show how Zo turns ideas into a living workflow.",
-      "Second-brain language is the hook, not the whole curriculum.",
-      "The goal is a repeatable demo people can copy immediately.",
+      "A second brain is a personal knowledge and memory system.",
+      "It is not limited to writing or coding use cases.",
+      "Every person’s system looks different in practice.",
     ],
     notes:
-      "Open with the thesis: most of the hour should demonstrate what Zo can do, because that is the memorable part. Keep the second-brain framing as context so the audience understands why the demo matters.",
+      "Open by widening the frame. The audience should hear that a second brain is a broader PKMS concept, not just a writing app or a coding assistant.",
     accent: "from-emerald-400/25 via-teal-400/12 to-cyan-400/10",
   },
   {
     step: "02",
-    kicker: "Decision",
-    title: "Demo first, teach second",
-    summary: "Spend the hour where it has the highest signal-to-noise ratio.",
+    kicker: "Zo",
+    title: "Zo keeps context alive across services",
+    summary: "Show how Zo works across disparate tools and multiple contexts.",
     bullets: [
-      "About 70–80% of the hour: live capability demo.",
-      "About 20–30%: second-brain principles and discussion.",
-      "Use theory only when it helps viewers follow the build.",
+      "Bring in notes, transcripts, tasks, links, and decisions.",
+      "Keep context alive across many services.",
+      "Let Zo connect fragmented inputs into something durable.",
     ],
     notes:
-      "This is the explicit tradeoff to confirm with Joanna. If the audience leaves with one practical pattern and one clear mental model, the session worked. If it becomes mostly philosophy, it loses the product value.",
-    accent: "from-amber-400/25 via-orange-400/12 to-rose-400/10",
+      "This is the connective-tissue slide. Emphasize that Zo is useful because it sits across contexts, rather than forcing every memory into one app or one format.",
+    accent: "from-cyan-400/25 via-sky-400/12 to-indigo-400/10",
   },
   {
     step: "03",
-    kicker: "Run of show",
-    title: "One hour, five beats",
-    summary: "A simple agenda keeps the session tight and easy to follow.",
+    kicker: "Workshop",
+    title: "30-minute guided build",
+    summary: "Walk through x, y, and z start to finish so people can follow along.",
     bullets: [
-      "0–5 min: intro and framing.",
-      "5–15 min: show the target outcome.",
-      "15–35 min: live build in Zo.",
-      "35–50 min: viewer follow-along.",
-      "50–60 min: Q&A and next steps.",
+      "Do one complete workflow live, end to end.",
+      "Leave 20–30 minutes for people to polish their version.",
+      "Let attendees submit the result as a second brain project.",
     ],
     notes:
-      "This gives the audience enough structure to stay oriented while keeping the live build center stage. The 15–35 minute block is the core of the event.",
-    accent: "from-fuchsia-400/20 via-violet-400/12 to-indigo-400/10",
+      "This is the hands-on center of the event. Make the workshop concrete, time-boxed, and obviously doable so people can follow without getting lost.",
+    accent: "from-violet-400/20 via-fuchsia-400/12 to-pink-400/10",
   },
   {
     step: "04",
-    kicker: "Live build",
-    title: "Build a continual / recursive company brain",
-    summary: "Show the end-to-end loop, not isolated features.",
+    kicker: "Show and tell",
+    title: "Next 20 minutes: show what you built",
+    summary: "Give people a reason to act on the workshop and then show it off.",
     bullets: [
-      "Capture raw inputs from the team.",
-      "Normalize them into a durable knowledge format.",
-      "Retrieve the right context on demand.",
-      "Schedule recurring syntheses so the brain keeps growing.",
+      "Invite people to present what they made.",
+      "Compare approaches and learn from each other.",
+      "Make the room feel proud of what it produced.",
     ],
     notes:
-      "This is the headline demo: one prompt that starts a living system instead of a one-off artifact. Narrate the loop as capture → structure → retrieval → recurrence.",
-    accent: "from-cyan-400/20 via-sky-400/12 to-blue-400/10",
+      "Use this block to shift from instruction to social proof. The value is not only in the build, but also in seeing what other people chose to keep and how they shaped it.",
+    accent: "from-fuchsia-400/20 via-violet-400/12 to-indigo-400/10",
   },
   {
     step: "05",
-    kicker: "Follow-along",
-    title: "Let viewers adapt the pattern",
-    summary: "Give them a small, concrete step they can copy during the hour.",
+    kicker: "Best practices",
+    title: "Teach the skill of disambiguation",
+    summary: "Show how better prompts prevent misunderstanding before the model acts.",
     bullets: [
-      "Have them map one recurring note source.",
-      "Show how to turn it into a prompt-driven workflow.",
-      "Ask them to imagine the same pattern for a team or company.",
+      "Use long context when the thread matters.",
+      "Use procedural knowledge to describe how the system should behave.",
+      "Use progressive disclosure and living docs to keep things readable.",
     ],
     notes:
-      "The follow-along section should feel practical, not abstract. The audience should leave knowing how to reproduce the pattern for their own notes, team updates, or project memory.",
-    accent: "from-lime-400/20 via-emerald-400/12 to-teal-400/10",
+      "This is the AI best-practices slide. Teach people that ambiguity is usually the real failure mode, then show the habits that reduce it.",
+    accent: "from-amber-400/20 via-orange-400/12 to-rose-400/10",
   },
   {
     step: "06",
-    kicker: "Ask Joanna",
-    title: "Which half deserves more time?",
-    summary: "Use her judgment to calibrate the event toward the audience.",
+    kicker: "Logistics",
+    title: "Headshots, bios, names",
+    summary: "Keep the event package easy to share and easy to follow up on.",
     bullets: [
-      "Should this lean more toward Zo capability or second-brain teaching?",
-      "What would make the session feel useful to Zo’s community?",
-      "Is there one capability she wants singled out as the headline?",
+      "Collect headshots, bios, and names for the participants.",
+      "Keep the same time next week in mind.",
+      "Target July 10 as the planning milestone.",
     ],
     notes:
-      "This is the direct question you wanted to ask. It keeps the decision open while making your preference clear: the strongest use of time is showing capabilities, with second-brain concepts as framing.",
-    accent: "from-yellow-400/20 via-amber-400/12 to-orange-400/10",
+      "This is the lightweight admin slide. It is about making the event legible and easy to promote, not turning the session into a logistics meeting.",
+    accent: "from-lime-400/20 via-emerald-400/12 to-teal-400/10",
   },
   {
     step: "07",
+    kicker: "Ask Joanna",
+    title: "What should get the most time?",
+    summary: "Confirm whether the hour should lean toward capability or second-brain teaching.",
+    bullets: [
+      "Should the event lean more toward Zo capabilities?",
+      "Should it spend more time on second-brain methodology?",
+      "What would be most useful for her audience?",
+    ],
+    notes:
+      "Your bias is still capability-heavy. Use this slide to ask Joanna what will land best, while keeping the Zo demo as the center of gravity.",
+    accent: "from-yellow-400/20 via-amber-400/12 to-orange-400/10",
+  },
+  {
+    step: "08",
     kicker: "Success criteria",
     title: "Leave with one reusable prompt",
     summary: "The session succeeds if people can act on it immediately.",
     bullets: [
-      "One clear prompt that starts the workflow.",
-      "One visible demo of the recurring loop.",
-      "One next step for Zo or the community.",
+      "One concrete workflow they can copy.",
+      "One clear mental model for a second brain.",
+      "One next step for the Zo community.",
     ],
     notes:
-      "Close by naming the artifact you want to leave behind: a reusable prompt for a living company brain. That is a cleaner outcome than a vague philosophical discussion.",
+      "Close by naming the deliverable: a reusable pattern for a living second brain. That is a better outcome than a vague discussion that feels good but changes nothing.",
     accent: "from-white/15 via-white/10 to-white/5",
   },
 ];
@@ -918,133 +929,379 @@ export default function SecondBrainBuildHourDeck() {
 ### `/second-brain-run-of-show` (page, private)
 
 ```tsx
-const blocks = [
+import { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Eye, EyeOff, LayoutGrid, MonitorPlay, Presentation } from "lucide-react";
+
+type Slide = {
+  step: string;
+  title: string;
+  kicker: string;
+  summary: string;
+  bullets: string[];
+  notes: string;
+  accent: string;
+};
+
+const slides: Slide[] = [
   {
-    time: "0–5 min",
-    title: "Open with the premise",
-    goal: "Say what the session is and why it matters.",
-    say: "We’re using Zo to show how a second brain can stay alive, not just organized.",
+    step: "01",
+    kicker: "Overview",
+    title: "What is a PKMS / second brain?",
+    summary: "Frame the category broadly so the audience hears more than just note-taking.",
+    bullets: [
+      "A second brain is a personal knowledge and memory system.",
+      "It is not limited to writing or coding use cases.",
+      "Every person's system looks different in practice.",
+    ],
+    notes:
+      "Open by widening the frame. The audience should hear that a second brain is a broader PKMS concept, not just a writing app or a coding assistant.",
+    accent: "from-cyan-400/25 via-sky-400/12 to-indigo-400/10",
   },
   {
-    time: "5–15 min",
-    title: "Show the target outcome",
-    goal: "Give viewers the destination before the build starts.",
-    say: "The end state is a living company brain that keeps capturing, structuring, and resurfacing context.",
+    step: "02",
+    kicker: "Zo",
+    title: "Zo holds context across services",
+    summary: "Show how Zo works across disparate tools and multiple contexts.",
+    bullets: [
+      "One place to keep context alive across many services.",
+      "Bring in notes, transcripts, tasks, links, and decisions.",
+      "Let Zo connect the fragmentary pieces into something durable.",
+    ],
+    notes:
+      "This is the connective-tissue slide. Emphasize that Zo is useful because it sits across contexts, rather than forcing every memory into one app or one format.",
+    accent: "from-emerald-400/25 via-teal-400/12 to-cyan-400/10",
   },
   {
-    time: "15–35 min",
-    title: "Live demo in Zo",
-    goal: "Spend most of the hour on the capability itself.",
-    say: "Watch one prompt turn into recurring capture, retrieval, and synthesis.",
+    step: "03",
+    kicker: "Workshop",
+    title: "30-minute guided build",
+    summary: "Walk through x, y, and z start to finish so people can follow along.",
+    bullets: [
+      "Do one complete workflow live, end to end.",
+      "Leave 20–30 minutes for people to polish their version.",
+      "Let attendees submit the result as a second brain project.",
+    ],
+    notes:
+      "This is the hands-on center of the event. Make the workshop concrete, time-boxed, and obviously doable so people can follow without getting lost.",
+    accent: "from-violet-400/20 via-fuchsia-400/12 to-pink-400/10",
   },
   {
-    time: "35–50 min",
-    title: "Let people follow along",
-    goal: "Make the pattern feel reusable.",
-    say: "If you have one recurring source of notes, this is how you turn it into a system.",
+    step: "04",
+    kicker: "Show and tell",
+    title: "Next 20 minutes: show what you built",
+    summary: "Give people a reason to act on the workshop and then show it off.",
+    bullets: [
+      "Invite people to present what they made.",
+      "Compare approaches and learn from each other.",
+      "Make the room feel proud of what it produced.",
+    ],
+    notes:
+      "Use this block to shift from instruction to social proof. The value is not only in the build, but also in seeing what other people chose to keep and how they shaped it.",
+    accent: "from-fuchsia-400/20 via-violet-400/12 to-indigo-400/10",
   },
   {
-    time: "50–60 min",
-    title: "Q&A and next step",
-    goal: "Land the takeaway cleanly.",
-    say: "If you remember one thing, it’s that Zo can be the place where the brain keeps running.",
+    step: "05",
+    kicker: "Best practices",
+    title: "Teach the skill of disambiguation",
+    summary: "Show how better prompts prevent misunderstanding before the model acts.",
+    bullets: [
+      "Use long context when the thread matters.",
+      "Use procedural knowledge to describe how the system should behave.",
+      "Use progressive disclosure and living docs to keep things readable.",
+    ],
+    notes:
+      "This is the AI best-practices slide. Teach people that ambiguity is usually the real failure mode, then show the habits that reduce it.",
+    accent: "from-amber-400/20 via-orange-400/12 to-rose-400/10",
+  },
+  {
+    step: "06",
+    kicker: "Logistics",
+    title: "Headshots, bios, names",
+    summary: "Keep the event package easy to share and easy to follow up on.",
+    bullets: [
+      "Collect headshots, bios, and names for the participants.",
+      "Keep the same time next week in mind.",
+      "Target July 10 as the planning milestone.",
+    ],
+    notes:
+      "This is the lightweight admin slide. It is about making the event legible and easy to promote, not turning the session into a logistics meeting.",
+    accent: "from-lime-400/20 via-emerald-400/12 to-teal-400/10",
+  },
+  {
+    step: "07",
+    kicker: "Ask Joanna",
+    title: "What should get the most time?",
+    summary: "Confirm whether the hour should lean toward capability or second-brain teaching.",
+    bullets: [
+      "Should the event lean more toward Zo capabilities?",
+      "Should it spend more time on second-brain methodology?",
+      "What would be most useful for her audience?",
+    ],
+    notes:
+      "Your bias is still capability-heavy. Use this slide to ask Joanna what will land best, while keeping the Zo demo as the center of gravity.",
+    accent: "from-yellow-400/20 via-amber-400/12 to-orange-400/10",
+  },
+  {
+    step: "08",
+    kicker: "Success",
+    title: "Leave with one reusable pattern",
+    summary: "The session should hand people something they can actually reuse.",
+    bullets: [
+      "One concrete workflow they can copy.",
+      "One clear mental model for a second brain.",
+      "One next step for the Zo community.",
+    ],
+    notes:
+      "Close by naming the deliverable: a reusable pattern for a living second brain. That is a better outcome than a vague discussion that feels good but changes nothing.",
+    accent: "from-white/15 via-white/10 to-white/5",
   },
 ];
 
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
 export default function SecondBrainRunOfShow() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [showNotes, setShowNotes] = useState(true);
+  const [presentationMode, setPresentationMode] = useState(false);
+
+  const slide = slides[currentSlide];
+  const progress = useMemo(() => ((currentSlide + 1) / slides.length) * 100, [currentSlide]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPresentationMode(false);
+        return;
+      }
+      if (event.key.toLowerCase() === "p") {
+        setPresentationMode((value) => !value);
+        return;
+      }
+      if (event.key.toLowerCase() === "n") {
+        setShowNotes((value) => !value);
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        setCurrentSlide((index) => clamp(index - 1, 0, slides.length - 1));
+      }
+      if (event.key === "ArrowRight") {
+        setCurrentSlide((index) => clamp(index + 1, 0, slides.length - 1));
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   return (
-    <main className="min-h-screen bg-[#050816] text-white">
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.1),transparent_28%),linear-gradient(180deg,#050816_0%,#04060d_100%)]" />
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-4 sm:px-6 lg:px-8">
-        <header className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
-          <div className="text-xs uppercase tracking-[0.35em] text-sky-200/70">Run of show</div>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-4xl">Second brain build hour</h1>
-          <p className="mt-2 max-w-3xl text-sm text-slate-300">
-            Quick, scannable version for the meeting. The guidance is simple: demo Zo first, teach second.
-          </p>
+    <main className={`min-h-screen bg-[#050816] text-white ${presentationMode ? "overflow-hidden" : ""}`}>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.12),transparent_30%),linear-gradient(180deg,#050816_0%,#04060d_100%)]" />
+      <div
+        className={`relative mx-auto flex min-h-screen flex-col px-4 py-4 sm:px-6 lg:px-8 ${
+          presentationMode ? "max-w-[1600px]" : "max-w-7xl"
+        }`}
+      >
+        <header
+          className={`flex flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl ${
+            presentationMode ? "lg:flex-row lg:items-center lg:justify-between" : "lg:flex-row lg:items-center lg:justify-between"
+          }`}
+        >
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-sky-200/70">
+              <Presentation className="h-4 w-4" />
+              Slides
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Second brain build hour: run of show</h1>
+            <p className="max-w-3xl text-sm text-slate-300">
+              Styled like a slide deck so it feels closer to Google Slides or PowerPoint while staying easy to scan.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <button
+              type="button"
+              onClick={() => setPresentationMode((value) => !value)}
+              className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 text-cyan-100 transition hover:bg-cyan-400/15"
+            >
+              <MonitorPlay className="h-4 w-4" />
+              {presentationMode ? "Exit presentation" : "Presentation mode"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowNotes((value) => !value)}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2 text-white transition hover:bg-white/15"
+            >
+              {showNotes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showNotes ? "Hide notes" : "Show notes"}
+            </button>
+            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-slate-300">
+              {currentSlide + 1} / {slides.length}
+            </div>
+          </div>
         </header>
 
-        <section className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Recommendation</div>
-            <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-              <p className="text-lg font-medium text-emerald-50">Spend most of the hour showing capability.</p>
-              <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
-                Use the second-brain framing to orient the audience, but keep the center of gravity on a live Zo demo.
-                A good split is roughly 70–80% capability and 20–30% methodology.
-              </p>
+        <div
+          className={`mt-4 grid flex-1 gap-4 ${
+            showNotes ? "lg:grid-cols-[220px_minmax(0,1fr)_340px]" : "lg:grid-cols-[220px_minmax(0,1fr)]"
+          } ${presentationMode ? "lg:grid-cols-1" : ""}`}
+        >
+          {presentationMode ? null : (
+            <aside className="rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur-xl">
+            <div className="mb-3 flex items-center justify-between px-2 text-xs uppercase tracking-[0.3em] text-slate-400">
+              <span>
+                <LayoutGrid className="mr-2 inline-block h-4 w-4" />
+                Slides
+              </span>
+              <span>{Math.round(progress)}%</span>
             </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Primary goal</div>
-                <p className="mt-2 text-sm text-slate-200">Show how Zo can power a living second brain.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Audience takeaway</div>
-                <p className="mt-2 text-sm text-slate-200">One reusable pattern they can copy after the call.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Best framing</div>
-                <p className="mt-2 text-sm text-slate-200">Zo as the system that keeps the brain alive.</p>
-              </div>
-            </div>
+            <div className="space-y-2">
+              {slides.map((entry, index) => {
+                const active = index === currentSlide;
+                return (
+                  <button
+                    key={entry.step}
+                    type="button"
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-full rounded-2xl border px-3 py-3 text-left transition ${
+                      active
+                        ? "border-cyan-400/40 bg-cyan-400/10"
+                        : "border-white/10 bg-black/15 hover:border-white/20 hover:bg-white/5"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs uppercase tracking-[0.35em] text-slate-400">{entry.step}</span>
+                      <span className={`text-[11px] font-medium ${active ? "text-cyan-300" : "text-slate-500"}`}>
+                        {entry.kicker}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-sm font-medium leading-snug text-white">{entry.title}</div>
+                </button>
+              );
+            })}
           </div>
-
-          <aside className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Ask Joanna</div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-300">
-              Should the hour lean more toward showing Zo’s capabilities, or toward teaching second-brain methodology?
-            </p>
-            <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
-              My vote: put the time into the demo and use the methodology only when it helps viewers follow along.
-            </div>
           </aside>
-        </section>
+          )}
 
-        <section className="mt-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-xs uppercase tracking-[0.35em] text-slate-400">One-hour flow</div>
-              <h2 className="mt-2 text-xl font-semibold text-white">Simple agenda</h2>
-            </div>
-            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
-              Easy to skim
-            </div>
-          </div>
-
-          <div className="mt-4 grid gap-3">
-            {blocks.map((block) => (
-              <div key={block.time} className="grid gap-3 rounded-2xl border border-white/10 bg-black/15 p-4 lg:grid-cols-[120px_1fr_1fr] lg:items-start">
-                <div className="text-sm font-semibold text-sky-200">{block.time}</div>
-                <div>
-                  <p className="text-base font-medium text-white">{block.title}</p>
-                  <p className="mt-1 text-sm text-slate-300">{block.goal}</p>
+          <section
+            className={`rounded-[2rem] border border-white/10 bg-[rgba(8,12,24,0.88)] shadow-2xl shadow-cyan-950/20 backdrop-blur-xl ${
+              presentationMode ? "p-4 lg:p-6" : "p-5"
+            }`}
+          >
+            <div className={`rounded-[1.75rem] border border-white/10 bg-gradient-to-br ${slide.accent} p-[1px]`}>
+              <div className={`rounded-[1.7rem] bg-[#08101f]/95 ${presentationMode ? "p-8 sm:p-12" : "p-6 sm:p-8"}`}>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.4em] text-slate-400">{slide.kicker}</div>
+                    <h2 className={`mt-2 font-semibold tracking-tight ${presentationMode ? "text-4xl sm:text-6xl" : "text-3xl sm:text-5xl"}`}>
+                      {slide.title}
+                    </h2>
+                  </div>
+                  <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right text-sm text-slate-300 sm:block">
+                    <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Slide</div>
+                    <div className="mt-1 text-xl font-semibold text-white">{slide.step}</div>
+                  </div>
                 </div>
-                <p className="text-sm leading-relaxed text-slate-200">
-                  <span className="text-slate-400">Say: </span>
-                  {block.say}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
 
-        <section className="mt-4 grid gap-4 lg:grid-cols-2">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">If time gets tight</div>
-            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
-              <li>Keep the intro to one minute.</li>
-              <li>Protect the live demo block.</li>
-              <li>Cut theory before you cut the demo.</li>
-            </ul>
-          </div>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-            <div className="text-xs uppercase tracking-[0.35em] text-slate-400">Close with</div>
-            <p className="mt-4 text-sm leading-relaxed text-slate-300">
-              One prompt, one recurring loop, one living brain. That is the cleanest outcome for the hour.
-            </p>
-          </div>
-        </section>
+                <p className={`mt-5 max-w-3xl leading-relaxed text-slate-300 ${presentationMode ? "text-xl" : "text-lg"}`}>
+                  {slide.summary}
+                </p>
+
+                <div className={`mt-8 grid gap-3 ${presentationMode ? "max-w-5xl" : ""}`}>
+                  {slide.bullets.map((bullet) => (
+                    <div
+                      key={bullet}
+                      className={`flex gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 ${
+                        presentationMode ? "px-5 py-4" : ""
+                      }`}
+                    >
+                      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.45)]" />
+                      <p className={`leading-relaxed text-slate-200 ${presentationMode ? "text-base sm:text-lg" : "text-sm sm:text-base"}`}>
+                        {bullet}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.32em] text-slate-500">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
+                    Arrow keys navigate
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">N toggles notes</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">P toggles presentation</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
+                    Private planning deck
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </section>
+
+          {showNotes ? (
+            <aside
+              className={`rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl ${
+                presentationMode ? "lg:fixed lg:bottom-6 lg:right-6 lg:z-20 lg:w-[380px] lg:max-w-[calc(100vw-3rem)]" : ""
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-slate-400">
+                    <MonitorPlay className="h-4 w-4" />
+                    Speaker notes
+                  </div>
+                  <h3 className="mt-2 text-xl font-semibold text-white">Context for this slide</h3>
+                </div>
+                <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-slate-300">
+                  {slide.step}
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-4 text-sm leading-relaxed text-slate-300">
+                <p>{slide.notes}</p>
+                <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4 text-cyan-50">
+                  <p className="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Presenter cue</p>
+                  <p className="mt-2">
+                    Spend most of the hour demonstrating Zo. Keep the second-brain vocabulary as framing, not as the
+                    main attraction.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">What to ask</p>
+                  <p className="mt-2 text-slate-200">
+                    Do you want the session to lean harder into Zo capabilities, or into second-brain teaching?
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((index) => clamp(index - 1, 0, slides.length - 1))}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/15"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Prev
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((index) => clamp(index + 1, 0, slides.length - 1))}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/15"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </aside>
+          ) : null}
+        </div>
       </div>
     </main>
   );

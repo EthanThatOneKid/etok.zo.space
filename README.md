@@ -26,6 +26,7 @@ GitHub (this repo) ← sync ← Zo Cloud API ← you (via update_space_route)
 | `/clown` | page | Zo identity probe that embeds the request view |
 | `/api/clown-probe` | api | Request metadata probe for the clown page |
 | `/second-brain-build-hour` | page | Slide-deck run of show for the second-brain build hour |
+| `/second-brain-run-of-show` | page | Scannable companion agenda for the second-brain build hour |
 | `/watchlist` | page | Shared movies watchlist (collaborative) |
 | `/api/watchlist` | api | CRUD + reorder for the watchlist |
 | `/api/watchlist-search` | api | Movie title search (OMDb / TMDb proxy) |
